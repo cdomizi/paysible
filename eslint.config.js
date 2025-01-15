@@ -65,6 +65,7 @@ export default tseslint.config(
       ],
       "@typescript-eslint/no-namespace": [2, { allowDeclarations: true }],
       "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/consistent-type-definitions": ["error", "type"],
       ...react.configs.recommended.rules,
       ...react.configs["jsx-runtime"].rules,
       ...reactHooks.configs.recommended.rules,
