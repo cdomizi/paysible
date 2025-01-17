@@ -26,7 +26,8 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],
-      "@layout/*": ["./src/layout/*"]
+      "@layout/*": ["./src/layout/*"],
+      "@components/*": ["./src/components/*"]
     },
 
     /* Vitest/jest-dom */
