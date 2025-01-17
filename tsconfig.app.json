@@ -25,7 +25,8 @@
     /* Absolute Imports */
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@layout/*": ["./src/layout/*"]
     },
 
     /* Vitest/jest-dom */

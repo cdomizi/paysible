@@ -1,4 +1,4 @@
-import TopBar from "./TopBar";
+import { TopBar } from "./TopBar/TopBar";
 
 import { Box, Toolbar } from "@mui/material";
 
