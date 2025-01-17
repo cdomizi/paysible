@@ -32,5 +32,5 @@
     /* Vitest/jest-dom */
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src", "./src/setupFile.ts"]
+  "include": ["src", "./src/setupFile.ts", "./globals.d.ts"]
 }

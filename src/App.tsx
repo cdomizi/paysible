@@ -1,7 +1,5 @@
-import { RootLayout } from "@layout/RootLayout";
-
 function App() {
-  return <RootLayout></RootLayout>;
+  return <></>;
 }
 
 export default App;
