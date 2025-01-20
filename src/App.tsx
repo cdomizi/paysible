@@ -1,11 +1,15 @@
+import { QRform } from "@components/QRform/QRform";
+import { Footer } from "@layout/Footer";
 import { Navbar } from "@layout/Navbar";
-import { QRform } from "./components/QRform/QRform";
 
 function App() {
   return (
     <>
       <Navbar />
-      <QRform />
+      <main>
+        <QRform />
+      </main>
+      <Footer />
     </>
   );
 }
