@@ -5,45 +5,51 @@ export function QRform() {
 
   return (
     <div id="qrform-container">
-      <form name="qr-form" action={handleFormSubmit}>
+      <form
+        name="qr-form"
+        action={handleFormSubmit}
+        className="flex flex-col gap-3 max-w-80 mx-auto"
+      >
         <label
           aria-label="beneficiary"
-          className="input input-bordered flex items-center gap-2"
+          className="form-control w-full max-w-xs"
         >
-          Name
+          <span className="label-text pl-4">Name of the Beneficiary</span>
           <input
             id="beneficiary"
             type="text"
             placeholder="John Doe"
-            className="input w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs"
           />
         </label>
-        <label
-          aria-label="iban"
-          className="input input-bordered flex items-center gap-2"
-        >
-          IBAN
+        <label aria-label="iban" className="form-control w-full max-w-xs">
+          <span className="label-text pl-4">IBAN</span>
           <input
             id="iban"
             type="text"
             placeholder="IE25BOFI900017528416"
-            className="input w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs"
           />
         </label>
-        <label
-          aria-label="amount"
-          className="input input-bordered flex items-center gap-2"
-        >
-          Amount
+        <label aria-label="amount" className="form-control w-full max-w-xs">
+          <span className="label-text pl-4">Amount (€)</span>
           <input
             id="amount"
-            type="text"
+            type="number"
             placeholder="10.00"
-            className="input w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs"
           />
-          <span>€</span>
         </label>
-        <button className="btn btn-neutral">Generate</button>
+        <label aria-label="note" className="form-control w-full max-w-xs">
+          <span className="label-text pl-4">Note</span>
+          <input
+            id="note"
+            type="text"
+            placeholder="Gas ⛽"
+            className="input input-bordered w-full max-w-xs"
+          />
+        </label>
+        <button className="btn btn-neutral mt-5">Generate</button>
       </form>
     </div>
   );
