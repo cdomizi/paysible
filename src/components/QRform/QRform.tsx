@@ -4,7 +4,7 @@ export function QRform() {
   }
 
   return (
-    <div id="qrform-container">
+    <div id="qrform-container" className="py-3">
       <form
         name="qr-form"
         action={handleFormSubmit}
@@ -20,6 +20,7 @@ export function QRform() {
             type="text"
             placeholder="John Doe"
             className="input input-bordered w-full max-w-xs"
+            required
           />
         </label>
         <label aria-label="iban" className="form-control w-full max-w-xs">
@@ -29,6 +30,7 @@ export function QRform() {
             type="text"
             placeholder="IE25BOFI900017528416"
             className="input input-bordered w-full max-w-xs"
+            required
           />
         </label>
         <label aria-label="amount" className="form-control w-full max-w-xs">
@@ -38,12 +40,13 @@ export function QRform() {
             type="number"
             placeholder="10.00"
             className="input input-bordered w-full max-w-xs"
+            required
           />
         </label>
-        <label aria-label="note" className="form-control w-full max-w-xs">
+        <label aria-label="remittance" className="form-control w-full max-w-xs">
           <span className="label-text pl-4">Note</span>
           <input
-            id="note"
+            id="remittance"
             type="text"
             placeholder="Gas ⛽"
             className="input input-bordered w-full max-w-xs"
