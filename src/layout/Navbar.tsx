@@ -2,7 +2,7 @@ import { Logo } from "@layout/Logo";
 
 export function Navbar() {
   return (
-    <div className="navbar bg-base-100 flex justify-center">
+    <div className="navbar flex justify-center bg-base-100">
       <Logo />
     </div>
   );

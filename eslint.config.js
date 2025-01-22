@@ -6,6 +6,7 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import tailwindcss from "eslint-plugin-tailwindcss";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -29,6 +30,7 @@ export default tseslint.config(
       react.configs.flat.recommended,
       importPlugin.flatConfigs.recommended,
       jsxA11y.flatConfigs.recommended,
+      ...tailwindcss.configs["flat/recommended"],
     ],
     languageOptions: {
       ecmaVersion: 2020,
@@ -42,6 +44,7 @@ export default tseslint.config(
       "@typescript-eslint/": tseslint.plugin,
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
+      tailwindcss: tailwindcss,
     },
     settings: {
       react: {
@@ -73,6 +76,7 @@ export default tseslint.config(
         "warn",
         { allowConstantExport: true },
       ],
+      "tailwindcss/no-custom-classname": "off",
     },
   },
   // Disable type-aware linting for JS files

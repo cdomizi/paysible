@@ -6,13 +6,13 @@ export function QRform() {
   return (
     <div
       id="qrform-container"
-      className="flex flex-col flex-nowrap mx-auto py-3 prose"
+      className="prose mx-auto flex flex-col flex-nowrap py-3"
     >
       <h2 className="mx-auto">New Payment Code</h2>
       <form
         name="qr-form"
         action={handleFormSubmit}
-        className="flex flex-col flex-nowrap gap-3 max-w-80 mx-auto"
+        className="mx-auto flex max-w-80 flex-col flex-nowrap gap-3"
       >
         <label
           aria-label="beneficiary"
