@@ -4,7 +4,7 @@
   "type": "module",
   "packageManager": "yarn@4.6.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --force",
     "build": "tsc -b && vite build",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0 .",
     "preview": "vite preview",
@@ -49,7 +49,7 @@
     "eslint-plugin-react-refresh": "^0.4.18",
     "eslint-plugin-vitest": "^0.5.4",
     "globals": "^15.14.0",
-    "happy-dom": "^16.7.1",
+    "happy-dom": "^16.7.2",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.1",
     "postcss": "^8.5.1",

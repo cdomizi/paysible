@@ -3073,13 +3073,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"happy-dom@npm:^16.7.1":
-  version: 16.7.1
-  resolution: "happy-dom@npm:16.7.1"
+"happy-dom@npm:^16.7.2":
+  version: 16.7.2
+  resolution: "happy-dom@npm:16.7.2"
   dependencies:
     webidl-conversions: "npm:^7.0.0"
     whatwg-mimetype: "npm:^3.0.0"
-  checksum: 10c0/f67831a65f9b38e02fd952ab92757fd44487b32352ea7e1bee5a0d91fd3f8dd5d287c90ca7c3d4ff6821f680b5493c89eefbd1aa49fbbc253cd90ae69df19ce6
+  checksum: 10c0/2b85181bb4af5501762941fc6064d96082e74b4f93664c518e22e781430f8f5c7c44f1c34faea7da0577757c91b95b2beff5fa9d94d1abed3086a4412f438f21
   languageName: node
   linkType: hard
 
@@ -4425,7 +4425,7 @@ __metadata:
     eslint-plugin-react-refresh: "npm:^0.4.18"
     eslint-plugin-vitest: "npm:^0.5.4"
     globals: "npm:^15.14.0"
-    happy-dom: "npm:^16.7.1"
+    happy-dom: "npm:^16.7.2"
     husky: "npm:^9.1.7"
     lint-staged: "npm:^15.4.1"
     postcss: "npm:^8.5.1"
