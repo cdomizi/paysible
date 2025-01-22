@@ -26,6 +26,9 @@ export function QRform() {
             className="input input-bordered w-full max-w-xs"
             required
           />
+          <span className="error-message text-xs text-error">
+            Please enter the beneficiary name
+          </span>
         </label>
         <label aria-label="iban" className="form-control w-full max-w-xs">
           <span className="label-text pl-4">IBAN</span>
@@ -36,6 +39,9 @@ export function QRform() {
             className="input input-bordered w-full max-w-xs"
             required
           />
+          <span className="error-message text-xs text-error">
+            Please insert a valid IBAN
+          </span>
         </label>
         <label aria-label="amount" className="form-control w-full max-w-xs">
           <span className="label-text pl-4">Amount (€)</span>
@@ -46,15 +52,24 @@ export function QRform() {
             className="input input-bordered w-full max-w-xs"
             required
           />
+          <span className="error-message text-xs text-error">
+            Enter at least € 0.01
+          </span>
         </label>
         <label aria-label="remittance" className="form-control w-full max-w-xs">
-          <span className="label-text pl-4">Note</span>
+          <div className="label p-0">
+            <span className="label-text pl-4">Note</span>
+            <span className="label-text-alt text-xs">(optional - max 140)</span>
+          </div>
           <input
             id="remittance"
             type="text"
             placeholder="Gas ⛽"
             className="input input-bordered w-full max-w-xs"
           />
+          <span className="error-message text-xs text-error">
+            Please limit your note to 140 characters
+          </span>
         </label>
         <div className="form-control"></div>
         <label
