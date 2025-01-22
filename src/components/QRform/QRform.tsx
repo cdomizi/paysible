@@ -1,14 +1,18 @@
 export function QRform() {
-  function handleFormSubmit() {
-    return;
+  function handleFormSubmit(formData: FormData) {
+    console.log(formData);
   }
 
   return (
-    <div id="qrform-container" className="py-3">
+    <div
+      id="qrform-container"
+      className="flex flex-col flex-nowrap mx-auto py-3 prose"
+    >
+      <h2 className="mx-auto">New Payment Code</h2>
       <form
         name="qr-form"
         action={handleFormSubmit}
-        className="flex flex-col gap-3 max-w-80 mx-auto"
+        className="flex flex-col flex-nowrap gap-3 max-w-80 mx-auto"
       >
         <label
           aria-label="beneficiary"
@@ -52,7 +56,22 @@ export function QRform() {
             className="input input-bordered w-full max-w-xs"
           />
         </label>
-        <button className="btn btn-neutral mt-5">Generate</button>
+        <div className="form-control"></div>
+        <label
+          aria-label="identification"
+          className="label cursor-pointer justify-start gap-2"
+        >
+          <input
+            id="identification"
+            type="checkbox"
+            defaultChecked
+            className="checkbox"
+          />
+          <span className="label-text">Instant Payment</span>
+        </label>
+        <button className="btn btn-accent mt-5 tracking-widest">
+          GENERATE
+        </button>
       </form>
     </div>
   );

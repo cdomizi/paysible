@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+import tailwindTypography from "@tailwindcss/typography";
 import daisyui from "daisyui";
 
 export default {
@@ -6,7 +7,7 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [daisyui],
+  plugins: [tailwindTypography, daisyui],
   daisyui: {
     themes: ["cupcake"],
   },
