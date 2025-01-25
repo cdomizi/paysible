@@ -1,3 +1,4 @@
+import isIBAN, { IsIBANOptions } from "validator/lib/isIBAN";
 import { z } from "zod";
 
 /* ------------------------------ QR Code Info ------------------------------ */
@@ -18,40 +19,82 @@ import { z } from "zod";
 
 const removeWhiteSpace = (input: string) => input.replaceAll(/\s+/g, "");
 
+type CountryCodesList = Readonly<NonNullable<IsIBANOptions["whitelist"]>>;
+type CountryCodes = CountryCodesList[number];
+type AllCountries = Record<CountryCodes, string>;
+type SepaCountries = Partial<AllCountries>;
+
+const SEPA_COUNTRIES: SepaCountries = {
+  AL: "Albania",
+  AD: "Andorra",
+  AT: "Austria",
+  BE: "Belgium",
+  BG: "Bulgaria",
+  HR: "Croatia",
+  CY: "Cyprus",
+  CZ: "Czech Republic",
+  DK: "Denmark",
+  EE: "Estonia",
+  FI: "Finland",
+  FR: "France",
+  DE: "Germany",
+  GR: "Greece",
+  HU: "Hungary",
+  IS: "Iceland",
+  IE: "Ireland",
+  IT: "Italy",
+  LV: "Latvia",
+  LI: "Liechtenstein",
+  LT: "Lithuania",
+  LU: "Luxembourg",
+  MT: "Malta",
+  MC: "Monaco",
+  ME: "Montenegro",
+  NL: "Netherlands",
+  NO: "Norway",
+  PL: "Poland",
+  PT: "Portugal",
+  RO: "Romania",
+  SM: "San Marino",
+  SK: "Slovakia",
+  SI: "Slovenia",
+  ES: "Spain",
+  SE: "Sweden",
+  CH: "Switzerland",
+  GB: "United Kingdom",
+  VA: "Vatican City State",
+};
+
+const sepaCountryCodes = Object.keys(
+  SEPA_COUNTRIES,
+) as IsIBANOptions["whitelist"];
+const ibanOptions: IsIBANOptions = { whitelist: sepaCountryCodes };
+
 // IBAN
-const ibanSchema = z.union([
-  z.string().regex(/^(IT)\d{2}[A-Z]{1}\d{22}$/),
-  z.string().regex(/^NL\d{2}[A-Z]{4}\d{10}$/),
-  z.string().regex(/^LV\d{2}[A-Z]{4}\d{13}$/),
-  z.string().regex(/^(BG|GB|IE)\d{2}[A-Z]{4}\d{14}$/),
-  z.string().regex(/^(IE)\d{2}[A-Z]{4}\d{12}$/),
-  z.string().regex(/^GI\d{2}[A-Z]{4}\d{15}$/),
-  z.string().regex(/^RO\d{2}[A-Z]{4}\d{16}$/),
-  z.string().regex(/^NO\d{13}$/),
-  z.string().regex(/^(DK|FI|FO)\d{16}$/),
-  z.string().regex(/^(SI)\d{17}$/),
-  z.string().regex(/^(AT|EE|LU|LT)\d{18}$/),
-  z.string().regex(/^(HR|LI|CH)\d{19}$/),
-  z.string().regex(/^(DE)\d{20}$/),
-  z.string().regex(/^(CZ|ES|SK|SE)\d{22}$/),
-  z.string().regex(/^PT\d{23}$/),
-  z.string().regex(/^FR\d{22}[A-Z]\d{2}$/),
-  z.string().regex(/^(IS)\d{24}$/),
-  z.string().regex(/^(BE)\d{14}$/),
-  z.string().regex(/^(FR|MC|GR|SM)\d{25}$/),
-  z.string().regex(/^(PL|HU|CY)\d{26}$/),
-  z.string().regex(/^MT\d{2}[A-Z]{4}\d{23}$/),
-]);
+const ibanSchema = z
+  .string({
+    required_error: "Please enter an IBAN",
+    invalid_type_error: "Please enter a valid IBAN",
+  })
+  .refine(
+    (val) => {
+      const trimmedVal = removeWhiteSpace(val);
+      if (isIBAN(trimmedVal, ibanOptions)) return trimmedVal;
+    },
+    { message: "Please enter a valid IBAN" },
+  );
 
 type IBAN = z.infer<typeof ibanSchema>;
 
-// Remittance
-const remittanceSchema = z.string().max(140).trim().optional();
-
-type Remittance = z.infer<typeof remittanceSchema>;
-
 // Beneficiary name
-const beneficiarySchema = z.string().max(70).trim();
+const beneficiarySchema = z
+  .string({
+    required_error: "Please enter a name",
+    invalid_type_error: "Please enter a valid name",
+  })
+  .min(1, "Please enter a name")
+  .max(70, "Name too long: max 70 ch.")
+  .trim();
 
 type Beneficiary = z.infer<typeof beneficiarySchema>;
 
@@ -59,14 +102,32 @@ type Beneficiary = z.infer<typeof beneficiarySchema>;
 const amountSchema = z
   .union([
     z
-      .string()
+      .string({
+        required_error: "Please enter the amount",
+        invalid_type_error: "Please enter a valid amount",
+      })
+      .min(1, "Please enter the amount")
       .trim()
-      .transform((x) => x.replace(/[^0-9.-]+/g, "")),
-    z.number(),
+      .transform((x) => x.replace(/[^0-9.-]+/g, "")), // Remove non-digits
+    z.number({ message: "Please enter a valid amount." }),
   ])
-  .pipe(z.coerce.number().min(0.01).max(999999999.99));
+  .pipe(
+    z.coerce
+      .number()
+      .gte(0.01, "Please enter at least € 0.01")
+      .lte(999999999.99, "Amount shall not be € 1 bn+"),
+  );
 
 type Amount = z.infer<typeof amountSchema>;
+
+// Remittance
+const remittanceSchema = z
+  .string()
+  .max(140, "Note too long: max 140 ch.")
+  .trim()
+  .optional();
+
+type Remittance = z.infer<typeof remittanceSchema>;
 
 // Identification
 const IDENTIFICATION_VALUES = {
@@ -85,3 +146,11 @@ function boolToIdentificationValues(isInst: boolean) {
 const identificationSchema = z.boolean().transform(boolToIdentificationValues);
 
 type Identification = z.infer<typeof identificationSchema>;
+
+export const qrformSchema = z.object({
+  beneficiary: beneficiarySchema,
+  iban: ibanSchema,
+  amount: amountSchema,
+  remittance: remittanceSchema,
+  identification: identificationSchema,
+});

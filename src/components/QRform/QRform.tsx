@@ -3,10 +3,6 @@ import { FormEventHandler } from "react";
 export function QRform() {
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const submittedData = Object.fromEntries(formData);
-
-    console.log(submittedData);
   };
 
   return (
@@ -19,6 +15,7 @@ export function QRform() {
         name="qr-form"
         onSubmit={handleFormSubmit}
         className="mx-auto flex max-w-80 flex-col flex-nowrap gap-2"
+        noValidate
       >
         <label
           aria-label="beneficiary"
@@ -31,7 +28,6 @@ export function QRform() {
             type="text"
             placeholder="John Doe"
             className="input input-bordered w-full max-w-xs"
-            required
           />
           <span className="error-message invisible pl-4 text-xs text-error">
             Please enter the name of the beneficiary
@@ -45,7 +41,6 @@ export function QRform() {
             type="text"
             placeholder="IE25BOFI900017528416"
             className="input input-bordered w-full max-w-xs"
-            required
           />
           <span className="error-message invisible pl-4 text-xs text-error">
             Please enter a valid IBAN
@@ -59,7 +54,6 @@ export function QRform() {
             type="number"
             placeholder="10.00"
             className="input input-bordered w-full max-w-xs"
-            required
           />
           <span className="error-message invisible pl-4 text-xs text-error">
             Send at least € 0.01
