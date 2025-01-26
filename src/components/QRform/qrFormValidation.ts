@@ -81,7 +81,7 @@ const ibanSchema = z
 
 // Beneficiary name
 const fullnameRegex = new RegExp(
-  /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z'-]{2,16}){1,3}/,
+  /(^[A-Za-z]{3,16})([ ]{0,1})((([A-Za-z'-]{2,16})([ ]{0,1})){1,3})$/,
 );
 
 const beneficiarySchema = z
