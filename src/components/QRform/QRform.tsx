@@ -52,7 +52,7 @@ export function QRform() {
             className="input input-bordered w-full max-w-xs"
           />
           <span
-            className={`error-message ${errors.iban?.message ? "" : "invisible"} h-4 pl-4 text-xs text-error`}
+            className={`error-message ${errors.beneficiary?.message ? "" : "invisible"} h-4 pl-4 text-xs text-error`}
           >
             {errors.beneficiary?.message}
           </span>
@@ -106,7 +106,7 @@ export function QRform() {
             className="input input-bordered w-full max-w-xs"
           />
           <span
-            className={`error-message ${errors.iban?.message ? "" : "invisible"} h-4 pl-4 text-xs text-error`}
+            className={`error-message ${errors.remittance?.message ? "" : "invisible"} h-4 pl-4 text-xs text-error`}
           >
             {errors.remittance?.message}
           </span>
