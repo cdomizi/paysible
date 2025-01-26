@@ -1,0 +1,51 @@
+import { UseFormRegisterReturn } from "react-hook-form";
+import { QRFormInput } from "./qrFormValidation";
+
+type FormTextFieldProps = {
+  fieldName: keyof QRFormInput;
+  fieldType: Extract<React.HTMLInputTypeAttribute, "text" | "number">;
+  labelText: string;
+  rightLabel?: string;
+  placeholder: string;
+  register: UseFormRegisterReturn<keyof QRFormInput>;
+  fieldError?: string;
+  isLoading: boolean;
+  isSubmitting: boolean;
+};
+
+export function FormTextField({
+  fieldName,
+  fieldType = "text",
+  labelText,
+  rightLabel,
+  placeholder,
+  register,
+  fieldError,
+  isLoading,
+  isSubmitting,
+}: FormTextFieldProps) {
+  return (
+    <label className="form-control w-full max-w-xs">
+      <div className="label p-0">
+        <span className="label-text pl-4">{labelText}</span>
+        {rightLabel && (
+          <span className="label-text-alt text-xs">{rightLabel}</span>
+        )}
+      </div>
+      <input
+        {...register}
+        disabled={isLoading || isSubmitting}
+        id={fieldName}
+        name={fieldName}
+        type={fieldType}
+        placeholder={placeholder}
+        className="input input-bordered w-full max-w-xs"
+      />
+      <span
+        className={`error-message ${fieldError ? "" : "invisible"} h-4 pl-4 text-xs text-error`}
+      >
+        {fieldError}
+      </span>
+    </label>
+  );
+}

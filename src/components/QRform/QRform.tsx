@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { FormTextField } from "./FormTextField";
 import { QRFormInput, qrformSchema } from "./qrFormValidation";
 
 export function QRform() {
@@ -37,80 +38,55 @@ export function QRform() {
         className="mx-auto flex max-w-80 flex-col flex-nowrap gap-2"
         noValidate
       >
-        <label
-          aria-label="beneficiary"
-          className="form-control w-full max-w-xs"
-        >
-          <span className="label-text pl-4">Name of the Beneficiary</span>
-          <input
-            {...register("beneficiary")}
-            disabled={isLoading || isSubmitting}
-            id="beneficiary"
-            name="beneficiary"
-            type="text"
-            placeholder="John Doe"
-            className="input input-bordered w-full max-w-xs"
-          />
-          <span
-            className={`error-message ${errors.beneficiary?.message ? "" : "invisible"} h-4 pl-4 text-xs text-error`}
-          >
-            {errors.beneficiary?.message}
-          </span>
-        </label>
-        <label aria-label="iban" className="form-control w-full max-w-xs">
-          <span className="label-text pl-4">IBAN</span>
-          <input
-            {...register("iban")}
-            disabled={isLoading || isSubmitting}
-            id="iban"
-            name="iban"
-            type="text"
-            placeholder="IE25BOFI900017528416"
-            className="input input-bordered w-full max-w-xs"
-          />
-          <span
-            className={`error-message ${errors.iban?.message ? "" : "invisible"} h-4 pl-4 text-xs text-error`}
-          >
-            {errors.iban?.message}
-          </span>
-        </label>
-        <label aria-label="amount" className="form-control w-full max-w-xs">
-          <span className="label-text pl-4">Amount (€)</span>
-          <input
-            {...register("amount")}
-            disabled={isLoading || isSubmitting}
-            id="amount"
-            name="amount"
-            type="number"
-            placeholder="10.00"
-            className="input input-bordered w-full max-w-xs"
-          />
-          <span
-            className={`error-message ${errors.amount?.message ? "" : "invisible"} h-4 pl-4 text-xs text-error`}
-          >
-            {errors.amount?.message}
-          </span>
-        </label>
-        <label aria-label="remittance" className="form-control w-full max-w-xs">
-          <div className="label p-0">
-            <span className="label-text pl-4">Note</span>
-            <span className="label-text-alt text-xs">(optional - max 140)</span>
-          </div>
-          <input
-            {...register("remittance")}
-            disabled={isLoading || isSubmitting}
-            id="remittance"
-            name="remittance"
-            type="text"
-            placeholder="Gas ⛽"
-            className="input input-bordered w-full max-w-xs"
-          />
-          <span
-            className={`error-message ${errors.remittance?.message ? "" : "invisible"} h-4 pl-4 text-xs text-error`}
-          >
-            {errors.remittance?.message}
-          </span>
-        </label>
+        <FormTextField
+          fieldName="beneficiary"
+          fieldType="text"
+          labelText="Name of the Beneficiary"
+          placeholder="John Doe"
+          {...{
+            register: register("beneficiary"),
+            fieldError: errors.beneficiary?.message,
+            isLoading,
+            isSubmitting,
+          }}
+        />
+        <FormTextField
+          fieldName="iban"
+          fieldType="text"
+          labelText="IBAN"
+          placeholder="IE29AIBK93115212345678"
+          {...{
+            register: register("iban"),
+            fieldError: errors.iban?.message,
+            isLoading,
+            isSubmitting,
+          }}
+        />
+        <FormTextField
+          fieldName="amount"
+          fieldType="number"
+          labelText="Amount (€)"
+          placeholder="10.00"
+          {...{
+            register: register("amount"),
+            fieldError: errors.amount?.message,
+            isLoading,
+            isSubmitting,
+          }}
+        />
+        <FormTextField
+          fieldName="remittance"
+          fieldType="text"
+          labelText="Note"
+          rightLabel="(optional - max 140)"
+          placeholder="Gas ⛽"
+          {...{
+            register: register("remittance"),
+            fieldError: errors.remittance?.message,
+            isLoading,
+            isSubmitting,
+          }}
+        />
         <div className="flex justify-between">
           <label
             aria-label="identification"
