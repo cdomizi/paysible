@@ -80,11 +80,16 @@ const ibanSchema = z
   );
 
 // Beneficiary name
+const fullnameRegex = new RegExp(
+  /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z'-]{2,16}){1,3}/,
+);
+
 const beneficiarySchema = z
   .string({
     required_error: "Please enter a name",
     invalid_type_error: "Please enter a valid name",
   })
+  .regex(fullnameRegex, "Please enter the full name")
   .min(1, "Please enter a name")
   .max(70, "Name too long: max 70 ch.")
   .trim();
