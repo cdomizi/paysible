@@ -10,7 +10,7 @@ import { z } from "zod";
  * 5. BIC:                   /
  * 6. Name:                  ...
  * 7. IBAN:                  ...
- * 8. Amount:                ...
+ * 8. Amount:                ... EUR123.45
  * 9. Purpose:               /
  * 10. Remittance (ref.):    /
  * 11. Remittance (text):    ...
@@ -19,12 +19,7 @@ import { z } from "zod";
 
 const removeWhiteSpace = (input: string) => input.replaceAll(/\s+/g, "");
 
-type CountryCodesList = Readonly<NonNullable<IsIBANOptions["whitelist"]>>;
-type CountryCodes = CountryCodesList[number];
-type AllCountries = Record<CountryCodes, string>;
-type SepaCountries = Partial<AllCountries>;
-
-const SEPA_COUNTRIES: SepaCountries = {
+const SEPA_COUNTRIES = {
   AL: "Albania",
   AD: "Andorra",
   AT: "Austria",
@@ -63,7 +58,7 @@ const SEPA_COUNTRIES: SepaCountries = {
   CH: "Switzerland",
   GB: "United Kingdom",
   VA: "Vatican City State",
-};
+} as const;
 
 const sepaCountryCodes = Object.keys(
   SEPA_COUNTRIES,
@@ -84,8 +79,6 @@ const ibanSchema = z
     { message: "Please enter a valid IBAN" },
   );
 
-type IBAN = z.infer<typeof ibanSchema>;
-
 // Beneficiary name
 const beneficiarySchema = z
   .string({
@@ -96,9 +89,18 @@ const beneficiarySchema = z
   .max(70, "Name too long: max 70 ch.")
   .trim();
 
-type Beneficiary = z.infer<typeof beneficiarySchema>;
-
 // Amount
+function formatAmount(amount: number) {
+  const currencyFormatter = new Intl.NumberFormat("IE", {
+    style: "decimal",
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+  });
+  const formattedAmount = currencyFormatter.format(amount);
+
+  return formattedAmount;
+}
+
 const amountSchema = z
   .union([
     z
@@ -116,9 +118,8 @@ const amountSchema = z
       .number()
       .gte(0.01, "Please enter at least € 0.01")
       .lte(999999999.99, "Amount shall not be € 1 bn+"),
-  );
-
-type Amount = z.infer<typeof amountSchema>;
+  )
+  .transform(formatAmount);
 
 // Remittance
 const remittanceSchema = z
@@ -127,15 +128,11 @@ const remittanceSchema = z
   .trim()
   .optional();
 
-type Remittance = z.infer<typeof remittanceSchema>;
-
 // Identification
 const IDENTIFICATION_VALUES = {
   SCT: "SCT",
   INST: "INST",
 } as const;
-
-type IdentificationValues = keyof typeof IDENTIFICATION_VALUES;
 
 // Convert boolean form data to Identification value for EPC QR Code
 function boolToIdentificationValues(isInst: boolean) {
@@ -145,8 +142,6 @@ function boolToIdentificationValues(isInst: boolean) {
 
 const identificationSchema = z.boolean().transform(boolToIdentificationValues);
 
-type Identification = z.infer<typeof identificationSchema>;
-
 export const qrformSchema = z.object({
   beneficiary: beneficiarySchema,
   iban: ibanSchema,
@@ -154,3 +149,10 @@ export const qrformSchema = z.object({
   remittance: remittanceSchema,
   identification: identificationSchema,
 });
+
+type QRForm = z.infer<typeof qrformSchema>;
+
+export type QRFormInput = Omit<QRForm, "amount" | "identification"> & {
+  amount: number | null;
+  identification: boolean;
+};
