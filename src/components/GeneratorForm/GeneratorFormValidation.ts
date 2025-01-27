@@ -147,7 +147,7 @@ const identificationSchema = z.boolean().transform(boolToIdentificationValues);
 
 export type Identification = z.output<typeof identificationSchema>;
 
-export const qrFormSchema = z.object({
+export const generatorFormSchema = z.object({
   beneficiary: beneficiarySchema,
   iban: ibanSchema,
   amount: amountSchema,
@@ -155,5 +155,5 @@ export const qrFormSchema = z.object({
   identification: identificationSchema,
 });
 
-export type QRFormInput = z.input<typeof qrFormSchema>;
-export type QRFormOutput = z.output<typeof qrFormSchema>;
+export type GeneratorFormInput = z.input<typeof generatorFormSchema>;
+export type GeneratorFormOutput = z.output<typeof generatorFormSchema>;

@@ -1,13 +1,13 @@
 import { UseFormRegisterReturn } from "react-hook-form";
-import { QRFormInput } from "./QRFormValidation";
+import { GeneratorFormInput } from "./GeneratorFormValidation";
 
 type FormTextFieldProps = {
-  fieldName: keyof QRFormInput;
+  fieldName: keyof GeneratorFormInput;
   fieldType: Extract<React.HTMLInputTypeAttribute, "text" | "number">;
   labelText: string;
   rightLabel?: string;
   placeholder: string;
-  register: UseFormRegisterReturn<keyof QRFormInput>;
+  register: UseFormRegisterReturn<keyof GeneratorFormInput>;
   fieldError?: string;
   isLoading: boolean;
   isSubmitting: boolean;

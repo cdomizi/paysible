@@ -2,11 +2,11 @@ import { SubmitHandler } from "react-hook-form";
 import {
   Amount,
   Beneficiary,
+  GeneratorFormOutput,
   IBAN,
   Identification,
-  QRFormOutput,
   Remittance,
-} from "./QRFormValidation";
+} from "./GeneratorFormValidation";
 
 /* ------------------------------ QR Code Info ------------------------------ */
 /**
@@ -24,7 +24,7 @@ import {
  * 12. Information:          /
  */
 
-type QRcodeFields = {
+type QRcodeData = {
   serviceTag: "BCD";
   version: "002";
   characterSet: "1";
@@ -39,10 +39,10 @@ type QRcodeFields = {
   information: "";
 };
 
-export function getQRcodeFields(formData: QRFormOutput): QRcodeFields {
+export function getQRcodeData(formData: GeneratorFormOutput): QRcodeData {
   const { beneficiary, iban, amount, identification, remittance } = formData;
 
-  const qrCodeFields: QRcodeFields = {
+  const qrCodeData: QRcodeData = {
     serviceTag: "BCD",
     version: "002",
     characterSet: "1",
@@ -57,25 +57,25 @@ export function getQRcodeFields(formData: QRFormOutput): QRcodeFields {
     information: "",
   };
 
-  return qrCodeFields;
-}
-
-function formatQRcodeData(qrCodeFields: QRcodeFields) {
-  const qrCodeFieldsValues = Object.values(qrCodeFields);
-  const qrCodeData = qrCodeFieldsValues.join("\n");
-
   return qrCodeData;
 }
 
-function getQRcodeData(formData: QRFormOutput) {
-  const qrCodeFields = getQRcodeFields(formData); // Get data
-  const qrCodeData = formatQRcodeData(qrCodeFields); // Format data
+function formatQRcodePayload(qrCodeData: QRcodeData) {
+  const qrCodeDataValues = Object.values(qrCodeData);
+  const qrCodePayload = qrCodeDataValues.join("\n");
 
-  return qrCodeData;
+  return qrCodePayload;
 }
 
-export const onSubmit: SubmitHandler<QRFormOutput> = (formData) => {
-  const qrCodeData = getQRcodeData(formData);
+function getQRcodePayload(formData: GeneratorFormOutput) {
+  const qrCodeData = getQRcodeData(formData); // Get data
+  const qrCodePayload = formatQRcodePayload(qrCodeData); // Format data
 
-  console.log(qrCodeData);
+  return qrCodePayload;
+}
+
+export const onSubmit: SubmitHandler<GeneratorFormOutput> = (formData) => {
+  const qrCodePayload = getQRcodePayload(formData);
+
+  console.log(qrCodePayload);
 };

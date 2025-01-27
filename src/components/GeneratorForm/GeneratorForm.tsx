@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormTextField } from "./FormTextField";
-import { onSubmit } from "./QRFormService";
-import { QRFormInput, QRFormOutput, qrFormSchema } from "./QRFormValidation";
+import { onSubmit } from "./GeneratorFormService";
+import { GeneratorFormInput, GeneratorFormOutput, generatorFormSchema } from "./GeneratorFormValidation";
 
-export function QRForm() {
-  const initialFormState: QRFormInput = {
+export function GeneratorForm() {
+  const initialFormState: GeneratorFormInput = {
     beneficiary: "",
     iban: "",
     amount: null,
@@ -18,9 +18,9 @@ export function QRForm() {
     handleSubmit,
     formState: { errors, isLoading, isSubmitting },
     reset,
-  } = useForm<QRFormInput, unknown, QRFormOutput>({
+  } = useForm<GeneratorFormInput, unknown, GeneratorFormOutput>({
     defaultValues: initialFormState,
-    resolver: zodResolver(qrFormSchema),
+    resolver: zodResolver(generatorFormSchema),
   });
 
   return (
