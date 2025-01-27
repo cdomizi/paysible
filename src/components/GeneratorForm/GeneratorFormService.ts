@@ -1,3 +1,4 @@
+import { toDataURL as generateQRCodeImg } from "qrcode";
 import { SubmitHandler } from "react-hook-form";
 import {
   Amount,
@@ -74,8 +75,22 @@ function getQRcodePayload(formData: GeneratorFormOutput) {
   return qrCodePayload;
 }
 
-export const onSubmit: SubmitHandler<GeneratorFormOutput> = (formData) => {
+const generateQRCode = async (payload: string) => {
+  try {
+    console.log(await generateQRCodeImg(payload));
+  } catch (err) {
+    console.error("Error while generating QR code", err);
+  }
+};
+
+async function generateQRCodeFromPayload(formData: GeneratorFormOutput) {
   const qrCodePayload = getQRcodePayload(formData);
 
-  console.log(qrCodePayload);
+  await generateQRCode(qrCodePayload);
+}
+
+export const onSubmit: SubmitHandler<GeneratorFormOutput> = async (
+  formData,
+) => {
+  await generateQRCodeFromPayload(formData);
 };
