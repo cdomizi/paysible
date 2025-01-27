@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FormTextField } from "./FormTextField";
-import { QRFormInput, qrformSchema } from "./qrFormValidation";
+import { onSubmit } from "./QRFormService";
+import { QRFormInput, QRFormOutput, qrFormSchema } from "./QRFormValidation";
 
-export function QRform() {
+export function QRForm() {
   const initialFormState: QRFormInput = {
     beneficiary: "",
     iban: "",
@@ -17,14 +18,10 @@ export function QRform() {
     handleSubmit,
     formState: { errors, isLoading, isSubmitting },
     reset,
-  } = useForm({
+  } = useForm<QRFormInput, unknown, QRFormOutput>({
     defaultValues: initialFormState,
-    resolver: zodResolver(qrformSchema),
+    resolver: zodResolver(qrFormSchema),
   });
-
-  const onSubmit: SubmitHandler<QRFormInput> = (data) => {
-    console.log(data);
-  };
 
   return (
     <div

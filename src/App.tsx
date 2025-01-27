@@ -1,4 +1,4 @@
-import { QRform } from "@components/QRform/QRform";
+import { QRForm } from "@/components/QRForm/QRForm";
 import { Footer } from "@layout/Footer";
 import { Navbar } from "@layout/Navbar";
 
@@ -7,7 +7,7 @@ function App() {
     <>
       <Navbar />
       <main>
-        <QRform />
+        <QRForm />
       </main>
       <Footer />
     </>

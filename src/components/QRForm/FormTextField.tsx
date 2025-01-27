@@ -1,5 +1,5 @@
 import { UseFormRegisterReturn } from "react-hook-form";
-import { QRFormInput } from "./qrFormValidation";
+import { QRFormInput } from "./QRFormValidation";
 
 type FormTextFieldProps = {
   fieldName: keyof QRFormInput;

@@ -1,22 +1,6 @@
 import isIBAN, { IsIBANOptions } from "validator/lib/isIBAN";
 import { z } from "zod";
 
-/* ------------------------------ QR Code Info ------------------------------ */
-/**
- * 1. Service Tag:           BCD
- * 2. Version:               002
- * 3. Character Set:         1 (UTF-8)
- * 4. Identification:        ... INST (default) / SCT
- * 5. BIC:                   /
- * 6. Name:                  ...
- * 7. IBAN:                  ...
- * 8. Amount:                ... EUR123.45
- * 9. Purpose:               /
- * 10. Remittance (ref.):    /
- * 11. Remittance (text):    ...
- * 12. Information:          /
- */
-
 const removeWhiteSpace = (input: string) => input.replaceAll(/\s+/g, "");
 
 const SEPA_COUNTRIES = {
@@ -79,6 +63,8 @@ const ibanSchema = z
     { message: "Please enter a valid IBAN" },
   );
 
+export type IBAN = z.output<typeof ibanSchema>;
+
 // Beneficiary name
 const fullnameRegex = new RegExp(
   /(^[A-Za-z]{3,16})([ ]{0,1})((([A-Za-z'-]{2,16})([ ]{0,1})){1,3})$/,
@@ -94,14 +80,18 @@ const beneficiarySchema = z
   .max(70, "Name too long: max 70 ch.")
   .trim();
 
+export type Beneficiary = z.infer<typeof beneficiarySchema>;
+
 // Amount
 function formatAmount(amount: number) {
+  const PREFIX = "EUR";
+
   const currencyFormatter = new Intl.NumberFormat("IE", {
     style: "decimal",
     maximumFractionDigits: 2,
     minimumFractionDigits: 2,
   });
-  const formattedAmount = currencyFormatter.format(amount);
+  const formattedAmount = PREFIX + currencyFormatter.format(amount);
 
   return formattedAmount;
 }
@@ -117,6 +107,10 @@ const amountSchema = z
       .trim()
       .transform((x) => x.replace(/[^0-9.-]+/g, "")), // Remove non-digits
     z.number({ message: "Please enter a valid amount." }),
+    z.null({
+      required_error: "Please enter the amount",
+      invalid_type_error: "Please enter a valid amount",
+    }),
   ])
   .pipe(
     z.coerce
@@ -126,12 +120,16 @@ const amountSchema = z
   )
   .transform(formatAmount);
 
+export type Amount = z.output<typeof amountSchema>;
+
 // Remittance
 const remittanceSchema = z
   .string()
   .max(140, "Note too long: max 140 ch.")
   .trim()
   .optional();
+
+export type Remittance = z.infer<typeof remittanceSchema>;
 
 // Identification
 const IDENTIFICATION_VALUES = {
@@ -147,7 +145,9 @@ function boolToIdentificationValues(isInst: boolean) {
 
 const identificationSchema = z.boolean().transform(boolToIdentificationValues);
 
-export const qrformSchema = z.object({
+export type Identification = z.output<typeof identificationSchema>;
+
+export const qrFormSchema = z.object({
   beneficiary: beneficiarySchema,
   iban: ibanSchema,
   amount: amountSchema,
@@ -155,9 +155,5 @@ export const qrformSchema = z.object({
   identification: identificationSchema,
 });
 
-type QRForm = z.infer<typeof qrformSchema>;
-
-export type QRFormInput = Omit<QRForm, "amount" | "identification"> & {
-  amount: number | null;
-  identification: boolean;
-};
+export type QRFormInput = z.input<typeof qrFormSchema>;
+export type QRFormOutput = z.output<typeof qrFormSchema>;
