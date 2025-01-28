@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@theme {
+  --breakpoint-lg: 896px;
+}
+
 #root {
   display: flex;
   flex-direction: column;

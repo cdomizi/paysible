@@ -5,7 +5,7 @@ export function QRCode() {
   return (
     <div
       id="qrcode-container"
-      className="border-1 card mx-auto my-12 w-80 shadow-xl"
+      className="border-1 card m-auto my-12 h-fit max-w-80 shadow-xl md:m-0"
     >
       <figure className="px-10 pt-10">
         <img
