@@ -2,7 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormTextField } from "./FormTextField";
 import { onSubmit } from "./GeneratorFormService";
-import { GeneratorFormInput, GeneratorFormOutput, generatorFormSchema } from "./GeneratorFormValidation";
+import {
+  GeneratorFormInput,
+  GeneratorFormOutput,
+  generatorFormSchema,
+} from "./GeneratorFormValidation";
 
 export function GeneratorForm() {
   const initialFormState: GeneratorFormInput = {
