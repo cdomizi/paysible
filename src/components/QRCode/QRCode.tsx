@@ -1,8 +1,7 @@
-import QRCodeContext from "@/contexts/QRCodeContext";
-import { useContext } from "react";
+import { useQRCode } from "@/hooks/useQRCode";
 
 export function QRCode() {
-  const { qrcode } = useContext(QRCodeContext);
+  const { qrcode } = useQRCode();
   return (
     <div
       id="qrcode-container"
