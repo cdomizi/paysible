@@ -39,7 +39,7 @@ export function GeneratorForm() {
           fieldName="beneficiary"
           fieldType="text"
           labelText="Name of the Beneficiary"
-          placeholder="John Doe"
+          placeholder="Jane Doe"
           {...{
             register: register("beneficiary"),
             fieldError: errors.beneficiary?.message,

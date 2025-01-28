@@ -77,7 +77,9 @@ function getQRcodePayload(formData: GeneratorFormOutput) {
 
 const generateQRCode = async (payload: string) => {
   try {
-    console.log(await generateQRCodeImg(payload));
+    const qrCodeImage = await generateQRCodeImg(payload);
+
+    console.log(qrCodeImage);
   } catch (err) {
     console.error("Error while generating QR code", err);
   }

@@ -1,13 +1,13 @@
-import { GeneratorForm } from "@/components/GeneratorForm/GeneratorForm";
 import { Footer } from "@layout/Footer";
 import { Navbar } from "@layout/Navbar";
+import { Home } from "./pages/Home/Home";
 
 function App() {
   return (
     <>
       <Navbar />
       <main>
-        <GeneratorForm />
+        <Home />
       </main>
       <Footer />
     </>
