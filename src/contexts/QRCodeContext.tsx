@@ -16,3 +16,5 @@ export function QRCodeProvider({ children }: { children: ReactNode }) {
     <QRCodeContext value={{ qrcode, setQRCode }}>{children}</QRCodeContext>
   );
 }
+
+export default QRCodeContext;

@@ -1,4 +1,8 @@
+import QRCodeContext from "@/contexts/QRCodeContext";
+import { useContext } from "react";
+
 export function QRCode() {
+  const { qrcode } = useContext(QRCodeContext);
   return (
     <div
       id="qrcode-container"
@@ -7,7 +11,7 @@ export function QRCode() {
       <figure className="px-10 pt-10">
         <img
           id="qrcode"
-          src="placeholder-qrcode.png"
+          src={qrcode}
           alt="QR code - Scan to perform SEPA transfer"
           className="rounded-xl"
         />

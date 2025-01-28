@@ -1,7 +1,9 @@
+import QRCodeContext from "@/contexts/QRCodeContext";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useContext } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { FormTextField } from "./FormTextField";
-import { onSubmit } from "./GeneratorFormService";
+import { generateQRCodeFromPayload } from "./GeneratorFormService";
 import {
   GeneratorFormInput,
   GeneratorFormOutput,
@@ -26,6 +28,16 @@ export function GeneratorForm() {
     defaultValues: initialFormState,
     resolver: zodResolver(generatorFormSchema),
   });
+
+  const { setQRCode } = useContext(QRCodeContext);
+
+  const onSubmit: SubmitHandler<GeneratorFormOutput> = async (formData) => {
+    // Generate QR code from form payload
+    const qrCode = await generateQRCodeFromPayload(formData);
+
+    // Display generated QR code
+    if (qrCode) setQRCode(qrCode);
+  };
 
   return (
     <div
