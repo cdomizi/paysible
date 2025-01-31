@@ -1,13 +1,13 @@
 import { createContext, ReactNode, useState } from "react";
 
-type QRCodeContext = {
+export type TQRCodeContext = {
   qrcode: string;
   setQRCode: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const INITIAL_QRCODE = "./placeholder-qrcode.png";
+export const INITIAL_QRCODE = "./placeholder-qrcode.png";
 
-const QRCodeContext = createContext({} as QRCodeContext);
+const QRCodeContext = createContext({} as TQRCodeContext);
 
 export function QRCodeProvider({ children }: { children: ReactNode }) {
   const [qrcode, setQRCode] = useState(INITIAL_QRCODE);

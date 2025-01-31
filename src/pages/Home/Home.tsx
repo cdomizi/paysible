@@ -5,7 +5,7 @@ export function Home() {
   return (
     <div
       id="home"
-      className="container mx-auto flex flex-col flex-nowrap items-center justify-center md:flex-row md:gap-20"
+      className="container mx-auto flex flex-col flex-nowrap items-center justify-center md:flex-row md:items-stretch md:gap-20"
     >
       <GeneratorForm />
       <QRCode />
