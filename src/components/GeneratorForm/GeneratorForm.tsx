@@ -111,6 +111,7 @@ export function GeneratorForm() {
               name="identification"
               type="checkbox"
               className="checkbox"
+              defaultChecked={initialFormState.identification}
             />
             <span className="label-text">Instant Payment</span>
           </label>
