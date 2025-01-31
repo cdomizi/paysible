@@ -1,7 +1,7 @@
 import { UseFormRegisterReturn } from "react-hook-form";
 import { GeneratorFormInput } from "./GeneratorFormValidation";
 
-type FormTextFieldProps = {
+type TFormTextFieldProps = {
   fieldName: keyof GeneratorFormInput;
   fieldType: Extract<React.HTMLInputTypeAttribute, "text" | "number">;
   labelText: string;
@@ -23,7 +23,7 @@ export function FormTextField({
   fieldError,
   isLoading,
   isSubmitting,
-}: FormTextFieldProps) {
+}: TFormTextFieldProps) {
   return (
     <label className="form-control w-full max-w-xs">
       <div className="label p-0">

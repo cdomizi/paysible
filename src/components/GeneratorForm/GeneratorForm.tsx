@@ -43,7 +43,7 @@ export function GeneratorForm() {
       id="qrform-container"
       className="prose mx-auto flex w-fit flex-col flex-nowrap py-3 md:mx-0 md:w-60"
     >
-      <h2 className="mx-auto">New Payment Code</h2>
+      <h2 className="mx-auto md:hidden">New Payment Code</h2>
       <form
         name="qr-form"
         onSubmit={handleSubmit(onSubmit)}

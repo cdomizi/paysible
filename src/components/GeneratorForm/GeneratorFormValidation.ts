@@ -63,7 +63,7 @@ const ibanSchema = z
     { message: "Please enter a valid IBAN" },
   );
 
-export type IBAN = z.output<typeof ibanSchema>;
+export type TIban = z.output<typeof ibanSchema>;
 
 // Beneficiary name
 const fullnameRegex = new RegExp(

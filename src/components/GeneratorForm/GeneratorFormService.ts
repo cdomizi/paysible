@@ -6,9 +6,9 @@ import {
   Amount,
   Beneficiary,
   GeneratorFormOutput,
-  IBAN,
   Identification,
   Remittance,
+  TIban,
 } from "./GeneratorFormValidation";
 
 /* ------------------------------ QR Code Info ------------------------------ */
@@ -27,14 +27,14 @@ import {
  * 12. Information:          /
  */
 
-type QRcodeData = {
+type TQRcodeData = {
   serviceTag: "BCD";
   version: "002";
   characterSet: "1";
   identification: Identification;
   bic: "";
   name: Beneficiary;
-  iban: IBAN;
+  iban: TIban;
   amount: Amount;
   purpose: "";
   remittanceRef: "";
@@ -42,10 +42,10 @@ type QRcodeData = {
   information: "";
 };
 
-export function getQRcodeData(formData: GeneratorFormOutput): QRcodeData {
+export function getQRcodeData(formData: GeneratorFormOutput): TQRcodeData {
   const { beneficiary, iban, amount, identification, remittance } = formData;
 
-  const qrCodeData: QRcodeData = {
+  const qrCodeData: TQRcodeData = {
     serviceTag: "BCD",
     version: "002",
     characterSet: "1",
@@ -63,7 +63,7 @@ export function getQRcodeData(formData: GeneratorFormOutput): QRcodeData {
   return qrCodeData;
 }
 
-function formatQRcodePayload(qrCodeData: QRcodeData) {
+function formatQRcodePayload(qrCodeData: TQRcodeData) {
   const qrCodeDataValues = Object.values(qrCodeData);
   const qrCodePayload = qrCodeDataValues.join("\n");
 
