@@ -3,8 +3,11 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],
-      "@layout/*": ["./src/layout/*"],
       "@components/*": ["./src/components/*"],
+      "@contexts/*": ["./src/contexts/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@layout/*": ["./src/layout/*"],
+      "@pages/*": ["./src/pages/*"],
       "types": ["vite/client"]
     }
   },

@@ -1,5 +1,5 @@
-import { GeneratorForm } from "@/components/GeneratorForm/GeneratorForm";
-import { QRCode } from "@/components/QRCode/QRCode";
+import { GeneratorForm } from "@components/GeneratorForm/GeneratorForm";
+import { QRCode } from "@components/QRCode/QRCode";
 
 export function Home() {
   return (

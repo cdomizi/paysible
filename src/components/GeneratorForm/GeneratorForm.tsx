@@ -1,5 +1,5 @@
-import { useQRCode } from "@/hooks/useQRCode";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQRCode } from "@hooks/useQRCode";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormTextField } from "./FormTextField";
 import { generateQRCodeFromPayload } from "./GeneratorFormService";

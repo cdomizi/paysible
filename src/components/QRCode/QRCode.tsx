@@ -1,4 +1,4 @@
-import { isInitialQRCode, useQRCode } from "@/hooks/useQRCode";
+import { isInitialQRCode, useQRCode } from "@hooks/useQRCode";
 
 export function QRCode() {
   const { qrcode } = useQRCode();
