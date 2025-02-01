@@ -1,7 +1,7 @@
 import QRCodeContext, {
   INITIAL_QRCODE,
   TQRCodeContext,
-} from "@/contexts/QRCodeContext";
+} from "@contexts/QRCodeContext";
 import { useContext } from "react";
 
 export function isInitialQRCode(currentQRCode: TQRCodeContext["qrcode"]) {
