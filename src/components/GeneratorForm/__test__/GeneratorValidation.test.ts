@@ -1,5 +1,6 @@
 import {
   boolToIdentificationValues,
+  formatAmount,
   removeWhiteSpace,
 } from "../GeneratorFormValidation";
 
@@ -29,24 +30,27 @@ describe("GeneratorValidation", () => {
     });
   });
 
-  describe.todo("formatAmount", () => {
-    test.todo("throws error on invalid input", () => {
-      // todo
+  describe("formatAmount", () => {
+    test("throws error on invalid input", () => {
+      const invalidInput = Symbol("invalid");
+
+      // @ts-expect-error: Expects argument of type string
+      expect(() => formatAmount(invalidInput)).toThrow();
     });
-    test.todo("outputs a string", () => {
-      // todo
+    test("formats an amount with no decimal places correctly", () => {
+      expect(formatAmount(1234)).toBe("EUR1234.00");
     });
-    test.todo("adds prefix to input", () => {
-      // todo
+    test("rounds number to two decimal places", () => {
+      expect(formatAmount(0.00001)).toBe("EUR0.00");
     });
-    test.todo("rounds number to two decimal places", () => {
-      // todo
+    test("handles trailing zeroes correctly", () => {
+      expect(formatAmount(1234.0)).toBe("EUR1234.00");
     });
-    test.todo("rounds to upper number", () => {
-      // todo
+    test("rounds to upper number", () => {
+      expect(formatAmount(0.004)).toBe("EUR0.00");
     });
-    test.todo("rounds to lower number", () => {
-      // todo
+    test("rounds to lower number", () => {
+      expect(formatAmount(0.005)).toBe("EUR0.01");
     });
   });
 
@@ -54,7 +58,7 @@ describe("GeneratorValidation", () => {
     test("converts `true` value to 'INST'", () => {
       expect(boolToIdentificationValues(true)).toBe("INST");
     });
-    test.todo("converts `false` to 'SCT'", () => {
+    test("converts `false` to 'SCT'", () => {
       expect(boolToIdentificationValues(false)).toBe("SCT");
     });
   });

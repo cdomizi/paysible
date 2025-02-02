@@ -88,10 +88,12 @@ export type Beneficiary = z.infer<typeof beneficiarySchema>;
 export function formatAmount(amount: number): string {
   const PREFIX = "EUR";
 
-  const currencyFormatter = new Intl.NumberFormat("IE", {
+  const currencyFormatter = new Intl.NumberFormat("en", {
+    currency: "EUR",
     style: "decimal",
-    maximumFractionDigits: 2,
     minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: false,
   });
   const formattedAmount = PREFIX + currencyFormatter.format(amount);
 
@@ -105,7 +107,7 @@ const amountSchema = z
         required_error: "Please enter the amount",
         invalid_type_error: "Please enter a valid amount",
       })
-      .min(1, "Please enter the amount")
+      .min(0.01, "Please enter the amount")
       .trim()
       .transform((x) => x.replace(/[^0-9.-]+/g, "")), // Remove non-digits
     z.number({ message: "Please enter a valid amount." }),
