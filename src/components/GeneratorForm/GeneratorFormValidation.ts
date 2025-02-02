@@ -1,7 +1,7 @@
 import isIBAN, { IsIBANOptions } from "validator/lib/isIBAN";
 import { z } from "zod";
 
-export function removeWhiteSpace(str: string) {
+export function removeWhiteSpace(str: string): string {
   return str.replaceAll(/\s+/g, "");
 }
 
@@ -85,7 +85,7 @@ const beneficiarySchema = z
 export type Beneficiary = z.infer<typeof beneficiarySchema>;
 
 // Amount
-function formatAmount(amount: number): string {
+export function formatAmount(amount: number): string {
   const PREFIX = "EUR";
 
   const currencyFormatter = new Intl.NumberFormat("IE", {
@@ -140,7 +140,9 @@ const IDENTIFICATION_VALUES = {
 } as const;
 
 // Convert boolean form data to Identification value for EPC QR Code
-export function boolToIdentificationValues(isInst: boolean) {
+export function boolToIdentificationValues(
+  isInst: boolean,
+): (typeof IDENTIFICATION_VALUES)[keyof typeof IDENTIFICATION_VALUES] {
   // true = INST (default)
   return isInst ? IDENTIFICATION_VALUES.INST : IDENTIFICATION_VALUES.SCT;
 }
