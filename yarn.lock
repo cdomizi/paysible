@@ -4602,7 +4602,6 @@ __metadata:
     vite: "npm:^6.0.11"
     vitest: "npm:^3.0.4"
     zod: "npm:^3.24.1"
-    zod-validation-error: "npm:^3.4.0"
   languageName: unknown
   linkType: soft
 
@@ -6346,15 +6345,6 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10c0/dceb44c28578b31641e13695d200d34ec4ab3966a5729814d5445b194933c096b7ced71494ce53a0e8820685d1d010df8b2422e5bf2cdea7e469d97ffbea306f
-  languageName: node
-  linkType: hard
-
-"zod-validation-error@npm:^3.4.0":
-  version: 3.4.0
-  resolution: "zod-validation-error@npm:3.4.0"
-  peerDependencies:
-    zod: ^3.18.0
-  checksum: 10c0/aaadb0e65c834aacb12fa088663d52d9f4224b5fe6958f09b039f4ab74145fda381c8a7d470bfddf7ddd9bbb5fdfbb52739cd66958ce6d388c256a44094d1fba
   languageName: node
   linkType: hard
 

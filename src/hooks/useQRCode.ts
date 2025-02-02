@@ -11,7 +11,7 @@ export function isInitialQRCode(currentQRCode: TQRCodeContext["qrcode"]) {
 export function scrollToQRCode() {
   const qrcodeElement = document.querySelector("#qrcode");
 
-  qrcodeElement?.scrollIntoView();
+  qrcodeElement?.scrollIntoView({ behavior: "smooth" });
 }
 
 export function useQRCode() {
