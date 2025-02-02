@@ -1,7 +1,9 @@
 import isIBAN, { IsIBANOptions } from "validator/lib/isIBAN";
 import { z } from "zod";
 
-const removeWhiteSpace = (input: string) => input.replaceAll(/\s+/g, "");
+export function removeWhiteSpace(str: string) {
+  return str.replaceAll(/\s+/g, "");
+}
 
 const SEPA_COUNTRIES = {
   AL: "Albania",
@@ -83,7 +85,7 @@ const beneficiarySchema = z
 export type Beneficiary = z.infer<typeof beneficiarySchema>;
 
 // Amount
-function formatAmount(amount: number) {
+function formatAmount(amount: number): string {
   const PREFIX = "EUR";
 
   const currencyFormatter = new Intl.NumberFormat("IE", {
