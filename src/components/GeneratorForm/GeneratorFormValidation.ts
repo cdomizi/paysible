@@ -140,7 +140,7 @@ const IDENTIFICATION_VALUES = {
 } as const;
 
 // Convert boolean form data to Identification value for EPC QR Code
-function boolToIdentificationValues(isInst: boolean) {
+export function boolToIdentificationValues(isInst: boolean) {
   // true = INST (default)
   return isInst ? IDENTIFICATION_VALUES.INST : IDENTIFICATION_VALUES.SCT;
 }

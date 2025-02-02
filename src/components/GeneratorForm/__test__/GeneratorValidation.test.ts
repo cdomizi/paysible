@@ -1,7 +1,16 @@
-import { removeWhiteSpace } from "../GeneratorFormValidation";
+import {
+  boolToIdentificationValues,
+  removeWhiteSpace,
+} from "../GeneratorFormValidation";
 
 describe("GeneratorValidation", () => {
   describe("removeWhiteSpace", () => {
+    test("throws error on invalid input", () => {
+      const invalidInput = null;
+
+      // @ts-expect-error: Expects argument of type string
+      expect(() => removeWhiteSpace(invalidInput)).toThrow();
+    });
     test("returns an empty string when input is an empty string", () => {
       expect(removeWhiteSpace("")).toBe("");
     });
@@ -19,6 +28,7 @@ describe("GeneratorValidation", () => {
       expect(removeWhiteSpace("Hello \n\t World")).toBe("HelloWorld");
     });
   });
+
   describe.todo("formatAmount", () => {
     test.todo("throws error on invalid input", () => {
       // todo
@@ -39,15 +49,13 @@ describe("GeneratorValidation", () => {
       // todo
     });
   });
-  describe.todo("boolToIdentificationValues", () => {
-    test.todo("throws error on invalid input", () => {
-      // todo
+
+  describe("boolToIdentificationValues", () => {
+    test("converts `true` value to 'INST'", () => {
+      expect(boolToIdentificationValues(true)).toBe("INST");
     });
-    test.todo("converts 'true' to 'INST'", () => {
-      // todo
-    });
-    test.todo("converts 'false' to 'SCT'", () => {
-      // todo
+    test.todo("converts `false` to 'SCT'", () => {
+      expect(boolToIdentificationValues(false)).toBe("SCT");
     });
   });
 });
