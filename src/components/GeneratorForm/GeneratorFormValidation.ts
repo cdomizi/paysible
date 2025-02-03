@@ -52,7 +52,7 @@ const sepaCountryCodes = Object.keys(
 const ibanOptions: IsIBANOptions = { whitelist: sepaCountryCodes };
 
 // IBAN
-const ibanSchema = z
+export const ibanSchema = z
   .string({
     required_error: "Please enter an IBAN",
     invalid_type_error: "Please enter a valid IBAN",

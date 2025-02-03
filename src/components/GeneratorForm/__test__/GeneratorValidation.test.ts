@@ -1,6 +1,7 @@
 import {
   boolToIdentificationValues,
   formatAmount,
+  ibanSchema,
   removeWhiteSpace,
 } from "../GeneratorFormValidation";
 
@@ -27,6 +28,16 @@ describe("GeneratorValidation", () => {
       expect(removeWhiteSpace("\nNew\nLine\n")).toBe("NewLine");
       expect(removeWhiteSpace("\tTab\tSpace\t")).toBe("TabSpace");
       expect(removeWhiteSpace("Hello \n\t World")).toBe("HelloWorld");
+    });
+  });
+
+  describe("IBAN validation", () => {
+    test("throws error on empty string", () => {
+      const expectedErrorMessage = "Please enter a valid IBAN";
+
+      expect(ibanSchema.safeParse("").error?.issues[0].message).toBe(
+        expectedErrorMessage,
+      );
     });
   });
 
