@@ -1,4 +1,5 @@
 import {
+  beneficiarySchema,
   boolToIdentificationValues,
   formatAmount,
   ibanSchema,
@@ -81,6 +82,48 @@ describe("GeneratorValidation", () => {
       const expectedResult = validSepaIban;
 
       expect(ibanSchema.parse(validSepaIban)).toBe(expectedResult);
+    });
+  });
+
+  describe("Beneficiary name validation", () => {
+    test("throws error on input of wrong type", () => {
+      const expectedErrorMesssage = "Please enter a valid name";
+
+      expect(() => beneficiarySchema.parse(Symbol("Wrong type"))).toThrow(
+        expectedErrorMesssage,
+      );
+    });
+
+    test("throws error on empty string", () => {
+      const expectedErrorMessage = "Please enter the full name";
+
+      expect(() => beneficiarySchema.parse("")).toThrow(expectedErrorMessage);
+    });
+
+    test("throws error on input not matching regex", () => {
+      const notValidName = "A B";
+      const expectedErrorMessage = "Please enter the full name";
+
+      expect(() => beneficiarySchema.parse(notValidName)).toThrow(
+        expectedErrorMessage,
+      );
+    });
+
+    test("throws error on maximum length exceeded", () => {
+      const tooLongName =
+        "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ut, molestiae.";
+      const expectedErrorMessage = "Name too long: max 70 ch.";
+
+      expect(() => beneficiarySchema.parse(tooLongName)).toThrow(
+        expectedErrorMessage,
+      );
+    });
+
+    test("removes leading and trailing spaces", () => {
+      const trimmedName = "John Doe";
+      const notTrimmedName = `     ${trimmedName}   `;
+
+      expect(beneficiarySchema.parse(notTrimmedName)).toBe(trimmedName);
     });
   });
 

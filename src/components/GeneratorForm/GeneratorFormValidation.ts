@@ -57,12 +57,13 @@ export const ibanSchema = z
     required_error: "Please enter an IBAN",
     invalid_type_error: "Please enter a valid IBAN",
   })
-  .transform((val, ctx) => {
-    const uppercaseVal = val.toUpperCase();
-    const trimmedVal = removeWhiteSpace(uppercaseVal);
-    if (isIBAN(trimmedVal, ibanOptions)) return trimmedVal;
+  .transform((iban, ctx) => {
+    const uppercaseIBAN = iban.toUpperCase();
+    const trimmedIBAN = removeWhiteSpace(uppercaseIBAN);
 
-    // IBAN invalid
+    if (isIBAN(trimmedIBAN, ibanOptions)) return trimmedIBAN; // Valid IBAN
+
+    // Invalid IBAN
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: "Please enter a valid IBAN",
@@ -76,15 +77,24 @@ const fullnameRegex = new RegExp(
   /(^[A-Za-z]{3,16})([ ]{0,1})((([A-Za-z'-]{2,16})([ ]{0,1})){1,3})$/,
 );
 
-const beneficiarySchema = z
+export const beneficiarySchema = z
   .string({
     required_error: "Please enter a name",
     invalid_type_error: "Please enter a valid name",
   })
-  .regex(fullnameRegex, "Please enter the full name")
-  .min(1, "Please enter a name")
   .max(70, "Name too long: max 70 ch.")
-  .trim();
+  .transform((name, ctx) => {
+    const trimmedName = name.trim();
+    const validName = fullnameRegex.exec(trimmedName);
+
+    if (validName) return validName[0]; // Valid name
+
+    // Invalid name
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Please enter the full name",
+    });
+  });
 
 export type Beneficiary = z.infer<typeof beneficiarySchema>;
 
