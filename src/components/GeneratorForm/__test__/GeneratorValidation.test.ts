@@ -123,7 +123,7 @@ describe("GeneratorValidation", () => {
     });
 
     test("removes leading and trailing spaces", () => {
-      const trimmedName = "John Doe";
+      const trimmedName = "Jane Doe";
       const notTrimmedName = `     ${trimmedName}   `;
 
       expect(beneficiarySchema.parse(notTrimmedName)).toBe(trimmedName);
