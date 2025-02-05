@@ -141,12 +141,22 @@ export const amountSchema = z
 
 export type Amount = z.output<typeof amountSchema>;
 
+export function nullUndefinedToEmptyString(
+  input: null | undefined | string,
+): string {
+  return input ?? "";
+}
+
 // Remittance
-const remittanceSchema = z
-  .string()
-  .max(140, "Note too long: max 140 ch.")
-  .trim()
-  .optional();
+export const remittanceSchema = z
+  .union([
+    z.string({ message: "Please enter a valid note text" }),
+    z.null().transform(nullUndefinedToEmptyString),
+    z.undefined().transform(nullUndefinedToEmptyString),
+  ])
+  .pipe(
+    z.coerce.string().max(140, "Note too long: max 140 ch.").trim().optional(),
+  );
 
 export type Remittance = z.infer<typeof remittanceSchema>;
 

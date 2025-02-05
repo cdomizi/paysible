@@ -4,6 +4,8 @@ import {
   boolToIdentificationValues,
   formatAmount,
   ibanSchema,
+  nullUndefinedToEmptyString,
+  remittanceSchema,
   removeWhiteSpace,
 } from "../GeneratorFormValidation";
 
@@ -181,6 +183,62 @@ describe("GeneratorValidation", () => {
       const expectedResult = "EUR" + amount.toString() + ".00";
 
       expect(amountSchema.parse(amount)).toBe(expectedResult);
+    });
+  });
+
+  describe("nullUndefinedToEmptyString", () => {
+    test("converts null to empty string", () => {
+      expect(nullUndefinedToEmptyString(null)).toBe("");
+    });
+
+    test("converts undefined to empty string", () => {
+      expect(nullUndefinedToEmptyString(undefined)).toBe("");
+    });
+
+    test("returns any string input", () => {
+      const emptyString = "";
+      const nonEmptyString = "Non empty string";
+
+      expect(nullUndefinedToEmptyString(emptyString)).toBe(emptyString);
+      expect(nullUndefinedToEmptyString(nonEmptyString)).toBe(nonEmptyString);
+    });
+  });
+
+  describe("remittance text validation", () => {
+    test("throws error on invalid input", () => {
+      const invalidInput = Symbol("Invalid input");
+      const expectedErrorMessage = "Please enter a valid note text";
+
+      expect(() => remittanceSchema.parse(invalidInput)).toThrow(
+        expectedErrorMessage,
+      );
+    });
+
+    test("throws error on maximum length exceeded", () => {
+      const tooLongText =
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis repudiandae cum nobis aliquam. Quam possimus dolorem ex facilis minima expedita!";
+      const expectedErrorMessage = "Note too long: max 140 ch.";
+
+      expect(() => remittanceSchema.parse(tooLongText)).toThrow(
+        expectedErrorMessage,
+      );
+    });
+
+    test("removes leading and trailing spaces", () => {
+      const remittanceInputText = "Text with no leading and trailing spaces";
+      const textWithLeadingTrailingSpaces = "    " + remittanceInputText + "  ";
+
+      expect(remittanceSchema.parse(textWithLeadingTrailingSpaces)).toBe(
+        remittanceInputText,
+      );
+    });
+
+    test("returns an empty string with no input", () => {
+      const emptyString = "";
+
+      expect(remittanceSchema.parse(emptyString)).toBe(emptyString);
+      expect(remittanceSchema.parse(undefined)).toBe(emptyString);
+      expect(remittanceSchema.parse(null)).toBe(emptyString);
     });
   });
 
