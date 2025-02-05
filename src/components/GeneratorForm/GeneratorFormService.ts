@@ -3,12 +3,12 @@ import {
   QRCodeToDataURLOptions,
 } from "qrcode";
 import {
-  Amount,
-  Beneficiary,
-  GeneratorFormOutput,
-  Identification,
-  Remittance,
+  TAmount,
+  TBeneficiary,
+  TGeneratorFormOutput,
   TIban,
+  TIdentification,
+  TRemittance,
 } from "./GeneratorFormValidation";
 
 /* ------------------------------ QR Code Info ------------------------------ */
@@ -31,18 +31,18 @@ type TQRcodeData = {
   serviceTag: "BCD";
   version: "002";
   characterSet: "1";
-  identification: Identification;
+  identification: TIdentification;
   bic: "";
-  name: Beneficiary;
+  name: TBeneficiary;
   iban: TIban;
-  amount: Amount;
+  amount: TAmount;
   purpose: "";
   remittanceRef: "";
-  remittance: Remittance;
+  remittance: TRemittance;
   information: "";
 };
 
-export function getQRcodeData(formData: GeneratorFormOutput): TQRcodeData {
+export function getQRcodeData(formData: TGeneratorFormOutput): TQRcodeData {
   const { beneficiary, iban, amount, identification, remittance } = formData;
 
   const qrCodeData: TQRcodeData = {
@@ -70,7 +70,7 @@ function formatQRcodePayload(qrCodeData: TQRcodeData) {
   return qrCodePayload;
 }
 
-function getQRcodePayload(formData: GeneratorFormOutput) {
+function getQRcodePayload(formData: TGeneratorFormOutput) {
   const qrCodeData = getQRcodeData(formData); // Get data
   const qrCodePayload = formatQRcodePayload(qrCodeData); // Format data
 
@@ -91,7 +91,9 @@ const generateQRCodeImg = async (payload: string) => {
   }
 };
 
-export async function generateQRCodeFromPayload(formData: GeneratorFormOutput) {
+export async function generateQRCodeFromPayload(
+  formData: TGeneratorFormOutput,
+) {
   const qrCodePayload = getQRcodePayload(formData);
 
   const qrcodeImg = await generateQRCodeImg(qrCodePayload);

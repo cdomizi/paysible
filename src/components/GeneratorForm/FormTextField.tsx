@@ -1,13 +1,13 @@
 import { UseFormRegisterReturn } from "react-hook-form";
-import { GeneratorFormInput } from "./GeneratorFormValidation";
+import { TGeneratorFormInput } from "./GeneratorFormValidation";
 
 type TFormTextFieldProps = {
-  fieldName: keyof GeneratorFormInput;
+  fieldName: keyof TGeneratorFormInput;
   fieldType: Extract<React.HTMLInputTypeAttribute, "text" | "number">;
   labelText: string;
   rightLabel?: string;
   placeholder: string;
-  register: UseFormRegisterReturn<keyof GeneratorFormInput>;
+  register: UseFormRegisterReturn<keyof TGeneratorFormInput>;
   fieldError?: string;
   isLoading: boolean;
   isSubmitting: boolean;

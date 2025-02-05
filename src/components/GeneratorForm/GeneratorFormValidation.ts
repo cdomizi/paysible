@@ -96,7 +96,7 @@ export const beneficiarySchema = z
     });
   });
 
-export type Beneficiary = z.infer<typeof beneficiarySchema>;
+export type TBeneficiary = z.infer<typeof beneficiarySchema>;
 
 // Amount
 export function formatAmount(amount: number): string {
@@ -139,7 +139,7 @@ export const amountSchema = z
   )
   .transform(formatAmount);
 
-export type Amount = z.output<typeof amountSchema>;
+export type TAmount = z.output<typeof amountSchema>;
 
 export function nullUndefinedToEmptyString(
   input: null | undefined | string,
@@ -158,7 +158,7 @@ export const remittanceSchema = z
     z.coerce.string().max(140, "Note too long: max 140 ch.").trim().optional(),
   );
 
-export type Remittance = z.infer<typeof remittanceSchema>;
+export type TRemittance = z.infer<typeof remittanceSchema>;
 
 // Identification
 const IDENTIFICATION_VALUES = {
@@ -176,7 +176,7 @@ export function boolToIdentificationValues(
 
 const identificationSchema = z.boolean().transform(boolToIdentificationValues);
 
-export type Identification = z.output<typeof identificationSchema>;
+export type TIdentification = z.output<typeof identificationSchema>;
 
 export const generatorFormSchema = z.object({
   beneficiary: beneficiarySchema,
@@ -186,5 +186,5 @@ export const generatorFormSchema = z.object({
   identification: identificationSchema,
 });
 
-export type GeneratorFormInput = z.input<typeof generatorFormSchema>;
-export type GeneratorFormOutput = z.output<typeof generatorFormSchema>;
+export type TGeneratorFormInput = z.input<typeof generatorFormSchema>;
+export type TGeneratorFormOutput = z.output<typeof generatorFormSchema>;

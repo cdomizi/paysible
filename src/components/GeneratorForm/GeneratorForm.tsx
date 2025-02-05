@@ -4,13 +4,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { FormTextField } from "./FormTextField";
 import { generateQRCodeFromPayload } from "./GeneratorFormService";
 import {
-  GeneratorFormInput,
-  GeneratorFormOutput,
+  TGeneratorFormInput,
+  TGeneratorFormOutput,
   generatorFormSchema,
 } from "./GeneratorFormValidation";
 
 export function GeneratorForm() {
-  const initialFormState: GeneratorFormInput = {
+  const initialFormState: TGeneratorFormInput = {
     beneficiary: "",
     iban: "",
     amount: null,
@@ -23,14 +23,14 @@ export function GeneratorForm() {
     handleSubmit,
     formState: { errors, isLoading, isSubmitting },
     reset,
-  } = useForm<GeneratorFormInput, unknown, GeneratorFormOutput>({
+  } = useForm<TGeneratorFormInput, unknown, TGeneratorFormOutput>({
     defaultValues: initialFormState,
     resolver: zodResolver(generatorFormSchema),
   });
 
   const { setQRCode } = useQRCode();
 
-  const onSubmit: SubmitHandler<GeneratorFormOutput> = async (formData) => {
+  const onSubmit: SubmitHandler<TGeneratorFormOutput> = async (formData) => {
     // Generate QR code from form payload
     const qrCode = await generateQRCodeFromPayload(formData);
 
