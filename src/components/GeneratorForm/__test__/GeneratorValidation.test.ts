@@ -1,4 +1,5 @@
 import {
+  amountSchema,
   beneficiarySchema,
   boolToIdentificationValues,
   formatAmount,
@@ -33,18 +34,18 @@ describe("GeneratorValidation", () => {
   });
 
   describe("IBAN validation", () => {
-    test("throws error on empty string", () => {
-      const expectedErrorMessage = "Please enter a valid IBAN";
-
-      expect(() => ibanSchema.parse("")).toThrow(expectedErrorMessage);
-    });
-
-    test("throws error on input of wrong type", () => {
+    test("throws error on invalid input", () => {
       const expectedErrorMesssage = "Please enter a valid IBAN";
 
       expect(() => ibanSchema.parse(Symbol("Wrong type"))).toThrow(
         expectedErrorMesssage,
       );
+    });
+
+    test("throws error on empty string", () => {
+      const expectedErrorMessage = "Please enter a valid IBAN";
+
+      expect(() => ibanSchema.parse("")).toThrow(expectedErrorMessage);
     });
 
     test("converts input string to uppercase", () => {
@@ -86,10 +87,10 @@ describe("GeneratorValidation", () => {
   });
 
   describe("Beneficiary name validation", () => {
-    test("throws error on input of wrong type", () => {
+    test("throws error on invalid input", () => {
       const expectedErrorMesssage = "Please enter a valid name";
 
-      expect(() => beneficiarySchema.parse(Symbol("Wrong type"))).toThrow(
+      expect(() => beneficiarySchema.parse(Symbol("Invalid input"))).toThrow(
         expectedErrorMesssage,
       );
     });
@@ -129,7 +130,7 @@ describe("GeneratorValidation", () => {
 
   describe("formatAmount", () => {
     test("throws error on invalid input", () => {
-      const invalidInput = Symbol("invalid");
+      const invalidInput = Symbol("Invalid input");
 
       // @ts-expect-error: Expects argument of type string
       expect(() => formatAmount(invalidInput)).toThrow();
@@ -148,6 +149,38 @@ describe("GeneratorValidation", () => {
     });
     test("rounds to lower number", () => {
       expect(formatAmount(0.005)).toBe("EUR0.01");
+    });
+  });
+
+  describe("amount validation", () => {
+    test("throws error on invalid input", () => {
+      const invalidInput = Symbol("Invalid input");
+      const expectedErrorMessage = "Please enter a valid amount";
+
+      expect(() => amountSchema.parse(invalidInput)).toThrow(
+        expectedErrorMessage,
+      );
+    });
+
+    test("throws error on amount lower than 0.01", () => {
+      const expectedErrorMessage = "Please enter at least € 0.01";
+
+      expect(() => amountSchema.parse(0)).toThrow(expectedErrorMessage);
+    });
+
+    test("throws error on amount of 1 bn+", () => {
+      const expectedErrorMessage = "Amount shall not be € 1 bn+";
+
+      expect(() => amountSchema.parse(1000000000)).toThrow(
+        expectedErrorMessage,
+      );
+    });
+
+    test("returns valid amount with proper formatting", () => {
+      const amount = 10;
+      const expectedResult = "EUR" + amount.toString() + ".00";
+
+      expect(amountSchema.parse(amount)).toBe(expectedResult);
     });
   });
 

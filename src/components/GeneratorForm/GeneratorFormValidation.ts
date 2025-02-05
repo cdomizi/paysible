@@ -114,17 +114,18 @@ export function formatAmount(amount: number): string {
   return formattedAmount;
 }
 
-const amountSchema = z
+export const amountSchema = z
   .union([
     z
       .string({
         required_error: "Please enter the amount",
         invalid_type_error: "Please enter a valid amount",
       })
-      .min(0.01, "Please enter the amount")
-      .trim()
-      .transform((x) => x.replace(/[^0-9.-]+/g, "")), // Remove non-digits
-    z.number({ message: "Please enter a valid amount." }),
+      .transform((amount) => amount.replace(/[^0-9.-]+/g, "")), // Remove non-digits
+    z.number({
+      required_error: "Please enter the amount",
+      invalid_type_error: "Please enter a valid amount",
+    }),
     z.null({
       required_error: "Please enter the amount",
       invalid_type_error: "Please enter a valid amount",
