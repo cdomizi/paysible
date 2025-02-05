@@ -30,7 +30,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/eslint-plugin-jsx-a11y": "^6.10.0",
     "@types/eslint-plugin-tailwindcss": "^3.17.0",
-    "@types/node": "^22.13.0",
+    "@types/node": "^22.13.1",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",

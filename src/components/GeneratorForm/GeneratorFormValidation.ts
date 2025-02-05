@@ -57,13 +57,17 @@ export const ibanSchema = z
     required_error: "Please enter an IBAN",
     invalid_type_error: "Please enter a valid IBAN",
   })
-  .refine(
-    (val) => {
-      const trimmedVal = removeWhiteSpace(val);
-      if (isIBAN(trimmedVal, ibanOptions)) return trimmedVal;
-    },
-    { message: "Please enter a valid IBAN" },
-  );
+  .transform((val, ctx) => {
+    const uppercaseVal = val.toUpperCase();
+    const trimmedVal = removeWhiteSpace(uppercaseVal);
+    if (isIBAN(trimmedVal, ibanOptions)) return trimmedVal;
+
+    // IBAN invalid
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Please enter a valid IBAN",
+    });
+  });
 
 export type TIban = z.output<typeof ibanSchema>;
 

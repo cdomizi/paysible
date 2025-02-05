@@ -35,9 +35,52 @@ describe("GeneratorValidation", () => {
     test("throws error on empty string", () => {
       const expectedErrorMessage = "Please enter a valid IBAN";
 
-      expect(ibanSchema.safeParse("").error?.issues[0].message).toBe(
+      expect(() => ibanSchema.parse("")).toThrow(expectedErrorMessage);
+    });
+
+    test("throws error on input of wrong type", () => {
+      const expectedErrorMesssage = "Please enter a valid IBAN";
+
+      expect(() => ibanSchema.parse(Symbol("Wrong type"))).toThrow(
+        expectedErrorMesssage,
+      );
+    });
+
+    test("converts input string to uppercase", () => {
+      const lowercaseIBAN = "ie29aibK93115212345678";
+      const expectedResult = "IE29AIBK93115212345678";
+
+      expect(ibanSchema.parse(lowercaseIBAN)).toBe(expectedResult);
+    });
+
+    test("removes white spaces", () => {
+      const ibanWithSpaces = "IE29 AIBK 9311 5212 3456 78";
+      const expectedResult = "IE29AIBK93115212345678";
+
+      expect(ibanSchema.parse(ibanWithSpaces)).toBe(expectedResult);
+    });
+
+    test("throws error on valid IBAN from no-SEPA country", () => {
+      const nonSepaIban = "KZ938177167571892266";
+      const expectedErrorMessage = "Please enter a valid IBAN";
+
+      expect(() => ibanSchema.parse(nonSepaIban)).toThrow(expectedErrorMessage);
+    });
+
+    test("throws error on invalid IBAN from SEPA country", () => {
+      const invalidSepaIban = "IE29AIBK9311521234567";
+      const expectedErrorMessage = "Please enter a valid IBAN";
+
+      expect(() => ibanSchema.parse(invalidSepaIban)).toThrow(
         expectedErrorMessage,
       );
+    });
+
+    test("returns valid IBAN from SEPA country", () => {
+      const validSepaIban = "IE29AIBK93115212345678";
+      const expectedResult = validSepaIban;
+
+      expect(ibanSchema.parse(validSepaIban)).toBe(expectedResult);
     });
   });
 
