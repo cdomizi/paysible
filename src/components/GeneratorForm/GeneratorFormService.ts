@@ -45,7 +45,7 @@ export type TQRCodeData = {
 function getQRCodeData(formData: TGeneratorFormOutput): TQRCodeData {
   const { beneficiary, iban, amount, identification, remittance } = formData;
 
-  const qrCodeData: TQRCodeData = {
+  const qrcodeData: TQRCodeData = {
     serviceTag: "BCD",
     version: "002",
     characterSet: "1",
@@ -60,35 +60,35 @@ function getQRCodeData(formData: TGeneratorFormOutput): TQRCodeData {
     information: "",
   };
 
-  return qrCodeData;
+  return qrcodeData;
 }
 
 function formatQRCodePayload(qrCodeData: TQRCodeData) {
-  const qrCodeDataValues = Object.values(qrCodeData);
-  const qrCodePayload = qrCodeDataValues.join("\n");
+  const qrcodeDataValues = Object.values(qrCodeData);
+  const qrcodePayload = qrcodeDataValues.join("\n");
 
-  return qrCodePayload;
+  return qrcodePayload;
 }
 
 export function getQRCodePayload(formData: TGeneratorFormOutput) {
-  const qrCodeData = getQRCodeData(formData); // Get data
-  const qrCodePayload = formatQRCodePayload(qrCodeData); // Format data
+  const qrcodeData = getQRCodeData(formData); // Get data
+  const qrcodePayload = formatQRCodePayload(qrcodeData); // Format data
 
-  return qrCodePayload;
+  return qrcodePayload;
 }
 
 const qrcodeDefaultGenOptions: QRCodeToDataURLOptions = {
   width: 256,
 };
 
-async function generateQRCodeImg(payload: string) {
+export async function generateQRCodeImg(payload: string) {
   try {
-    const qrCodeImage = await generateQRCodeDataURL(
+    const qrcodeImage = await generateQRCodeDataURL(
       payload,
       qrcodeDefaultGenOptions,
     );
 
-    return qrCodeImage;
+    return qrcodeImage;
   } catch (err) {
     console.error("Error while generating QR code", err);
   }
@@ -97,9 +97,9 @@ async function generateQRCodeImg(payload: string) {
 export async function generateQRCodeFromPayload(
   formData: TGeneratorFormOutput,
 ) {
-  const qrCodePayload = getQRCodePayload(formData);
+  const qrcodePayload = getQRCodePayload(formData);
 
-  const qrcodeImg = await generateQRCodeImg(qrCodePayload);
+  const qrcodeImg = await generateQRCodeImg(qrcodePayload);
 
   return qrcodeImg;
 }
