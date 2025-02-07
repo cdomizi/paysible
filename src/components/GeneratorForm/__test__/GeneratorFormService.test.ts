@@ -1,5 +1,6 @@
 import { isBase64 } from "validator";
 import {
+  generateQRCodeFromPayload,
   generateQRCodeImg,
   getQRCodePayload,
   TQRCodeData,
@@ -44,6 +45,20 @@ describe("GeneratorFormService", () => {
       const dataURLPrefix = new RegExp(/^data:image\/png;base64,/);
 
       const qrcodeImg = await generateQRCodeImg(qrcodePayload);
+
+      const encodedImg = qrcodeImg?.substring(22);
+
+      expect(qrcodeImg).toBeDefined();
+      expect(qrcodeImg).toMatch(dataURLPrefix); // Correct prefix for dataURL
+      expect(isBase64(encodedImg!)).toBe(true); // Image is base64 encoded
+    });
+  });
+
+  describe("generateQRCodeFromPayload", () => {
+    test("generates QR code image from valid payload", async () => {
+      const dataURLPrefix = new RegExp(/^data:image\/png;base64,/);
+
+      const qrcodeImg = await generateQRCodeFromPayload(formData);
 
       const encodedImg = qrcodeImg?.substring(22);
 
