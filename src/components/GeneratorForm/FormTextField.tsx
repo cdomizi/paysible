@@ -39,7 +39,7 @@ export function FormTextField({
         name={fieldName}
         type={fieldType}
         placeholder={placeholder}
-        className="input input-bordered w-full max-w-xs"
+        className={`input input-bordered w-full max-w-xs ${fieldError ? "border-error focus:border-error" : ""}`}
       />
       <span
         className={`error-message ${fieldError ? "" : "invisible"} h-4 pl-4 text-xs text-error`}

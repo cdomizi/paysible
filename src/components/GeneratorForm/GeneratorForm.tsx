@@ -45,7 +45,8 @@ export function GeneratorForm() {
     >
       <h2 className="mx-auto md:hidden">New Payment Code</h2>
       <form
-        name="qr-form"
+        id="generator-form"
+        name="generator-form"
         onSubmit={handleSubmit(onSubmit)}
         className="mx-auto flex flex-col flex-nowrap gap-2"
         noValidate
