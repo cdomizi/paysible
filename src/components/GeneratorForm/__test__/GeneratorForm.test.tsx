@@ -8,20 +8,20 @@ describe("GeneratorForm", () => {
 
     const title = screen.getByRole("heading");
     const beneficiaryField = screen.getByRole("textbox", {
-      name: /name of the beneficiary/i,
+      name: /^name of the beneficiary$/i,
     });
-    const ibanField = screen.getByRole("textbox", { name: /iban/i });
+    const ibanField = screen.getByRole("textbox", { name: /^iban$/i });
     const amountField = screen.getByRole("spinbutton", {
-      name: /amount \(€\)/i,
+      name: /^amount \(€\)$/i,
     });
-    const remittanceField = screen.getByRole("textbox", { name: /note/i });
+    const remittanceField = screen.getByRole("textbox", { name: /^note/i });
     const identificationField = screen.getByRole("checkbox", {
-      name: /identification/i,
+      name: /^identification$/i,
     });
-    const resetButton = screen.getByRole("button", { name: /clear/i });
-    const submitButton = screen.getByRole("button", { name: /generate/i });
+    const resetButton = screen.getByRole("button", { name: /^clear$/i });
+    const submitButton = screen.getByRole("button", { name: /^generate$/i });
 
-    expect(title).toHaveTextContent(/new payment code/i);
+    expect(title).toHaveTextContent(/^new payment code$/i);
     expect(beneficiaryField).toBeInTheDocument();
     expect(ibanField).toBeInTheDocument();
     expect(amountField).toBeInTheDocument();
@@ -31,31 +31,49 @@ describe("GeneratorForm", () => {
     expect(submitButton).toBeInTheDocument();
   });
 
-  describe("beneficiary form field", () => {
-    test("shows error on missing required field", async () => {
-      const user = userEvent.setup();
+  test("shows error on missing required field", async () => {
+    const user = userEvent.setup();
 
-      render(<GeneratorForm />);
+    render(<GeneratorForm />);
 
-      const beneficiaryField = screen.getByRole("textbox", {
-        name: /name of the beneficiary/i,
-      });
-      const errorHelperText = /please enter the full name/i;
-      const submitButton = screen.getByRole("button", { name: /generate/i });
-
-      // UI clean state - no error displayed initially
-      expect(() => screen.getByText(errorHelperText)).toThrow();
-      expect(beneficiaryField).not.toHaveClass("border-error");
-
-      // Submit the form with empty required field
-      await user.click(submitButton);
-
-      // Required field shows error
-      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
-      expect(beneficiaryField).toHaveFocus();
-      expect(beneficiaryField).toHaveClass("border-error");
+    const beneficiaryField = screen.getByRole("textbox", {
+      name: /^name of the beneficiary$/i,
     });
+    const beneficiaryErrorHelperText = /^please enter the full name$/i;
+    const ibanField = screen.getByRole("textbox", { name: /^iban$/i });
+    const ibanErrorHelperText = /^please enter a valid iban$/i;
+    const amountField = screen.getByRole("spinbutton", {
+      name: /^amount \(€\)$/i,
+    });
+    const amountErrorHelperText = /^please enter at least € 0.01$/i;
+    const remittanceField = screen.getByRole("textbox", { name: /^note/i });
+    const submitButton = screen.getByRole("button", { name: /^generate$/i });
 
+    // UI clean state - no error displayed initially
+    expect(() => screen.getByText(beneficiaryErrorHelperText)).toThrow();
+    expect(() => screen.getByText(ibanErrorHelperText)).toThrow();
+    expect(() => screen.getByText(amountErrorHelperText)).toThrow();
+    expect(beneficiaryField).not.toHaveClass("border-error");
+    expect(ibanField).not.toHaveClass("border-error");
+    expect(amountField).not.toHaveClass("border-error");
+    expect(remittanceField).not.toHaveClass("border-error");
+
+    // Submit the form with empty required field
+    await user.click(submitButton);
+
+    // Required fields show error
+    expect(screen.getByText(beneficiaryErrorHelperText)).toBeInTheDocument();
+    expect(beneficiaryField).toHaveClass("border-error");
+    expect(beneficiaryField).toHaveFocus(); // Focus on first field with error
+    expect(screen.getByText(ibanErrorHelperText)).toBeInTheDocument();
+    expect(ibanField).toHaveClass("border-error");
+    expect(screen.getByText(amountErrorHelperText)).toBeInTheDocument();
+    expect(amountField).toHaveClass("border-error");
+    // No error on optional field
+    expect(remittanceField).not.toHaveClass("border-error");
+  });
+
+  describe("beneficiary form field", () => {
     test("validates name field correctly", async () => {
       const user = userEvent.setup();
 
@@ -64,7 +82,7 @@ describe("GeneratorForm", () => {
       const beneficiaryField = screen.getByRole("textbox", {
         name: /name of the beneficiary/i,
       });
-      const errorHelperText = /please enter the full name/i;
+      const errorHelperText = /^please enter the full name$/i;
       const submitButton = screen.getByRole("button", { name: /generate/i });
 
       // UI clean state - no error displayed initially
@@ -132,8 +150,6 @@ describe("GeneratorForm", () => {
   });
 
   describe("IBAN form field", () => {
-    test.todo("shows error on missing required field");
-
     test.todo("validates IBAN field correctly");
   });
 
