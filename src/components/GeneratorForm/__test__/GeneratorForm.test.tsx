@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { GeneratorForm } from "../GeneratorForm";
 
@@ -39,52 +39,46 @@ describe("GeneratorForm", () => {
     const beneficiaryField = screen.getByRole("textbox", {
       name: /name of the beneficiary/i,
     });
-    const beneficiaryErrorMessage = beneficiaryField.nextSibling;
-    const errorHelperTextContent = /please enter the full name/i;
+    const errorHelperText = /please enter the full name/i;
     const submitButton = screen.getByRole("button", { name: /generate/i });
 
     // No error displayed in the UI
-    expect(beneficiaryErrorMessage).toHaveClass("invisible");
-    expect(() => screen.getByText(errorHelperTextContent)).toThrow();
+    expect(() => screen.getByText(errorHelperText)).toThrow();
+    expect(beneficiaryField).not.toHaveClass("border-error");
 
     // Submit the form with empty required field
     await user.click(submitButton);
 
     // Error displayed in the UI
-    await waitFor(() => {
-      expect(beneficiaryErrorMessage).not.toHaveClass("invisible");
-      expect(beneficiaryField).toHaveFocus();
+    expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+    expect(beneficiaryField).toHaveFocus();
+    expect(beneficiaryField).toHaveClass("border-error");
 
-      const errorHelperText = screen.getByText(errorHelperTextContent);
-
-      // Error helper text displayed
-      expect(errorHelperText).toBeInTheDocument();
-    });
-
-    // Enter two characters in the required field
+    // Enter four characters in the required field
     await user.type(beneficiaryField, "Jane");
 
-    await waitFor(() => {
-      // UI still displays error
-      expect(beneficiaryErrorMessage).not.toHaveClass("invisible");
-      expect(beneficiaryField).toHaveFocus();
-    });
+    // UI still displays error
+    expect(beneficiaryField).toHaveValue("Jane");
+    expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+    expect(beneficiaryField).toHaveFocus();
+    expect(beneficiaryField).toHaveClass("border-error");
 
     // Enter more characters in the required field
     await user.type(beneficiaryField, " Doe");
+
     // UI no more displays error
     expect(beneficiaryField).toHaveValue("Jane Doe");
-    expect(beneficiaryErrorMessage).toHaveClass("invisible");
+    expect(() => screen.getByText(errorHelperText)).toThrow();
+    expect(beneficiaryField).not.toHaveClass("border-error");
 
     // Delete some characters from the required field to trigger the error again
     await user.type(beneficiaryField, "{backspace}{backspace}");
 
-    await waitFor(() => {
-      // UI displays error again
-      expect(beneficiaryField).toHaveValue("Jane D");
-      expect(beneficiaryErrorMessage).not.toHaveClass("invisible");
-      expect(beneficiaryField).toHaveFocus();
-    });
+    // UI displays error again
+    expect(beneficiaryField).toHaveValue("Jane D");
+    expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+    expect(beneficiaryField).toHaveFocus();
+    expect(beneficiaryField).toHaveClass("border-error");
   });
 
   test.todo("validates name field correctly");
