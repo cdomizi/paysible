@@ -77,7 +77,7 @@ describe("GeneratorForm", () => {
       // Submit the form with invalid input
       await user.click(submitButton);
 
-      // UI displays error on beneficiary field
+      // Expected error on beneficiary field
       expect(beneficiaryField).toHaveValue("Jane");
       expect(screen.getByText(errorHelperText)).toBeInTheDocument();
       expect(beneficiaryField).toHaveFocus();
@@ -101,7 +101,34 @@ describe("GeneratorForm", () => {
       expect(beneficiaryField).toHaveClass("border-error");
     });
 
-    test.todo("shows error on input too long");
+    test("shows error on input too long", async () => {
+      const user = userEvent.setup();
+
+      render(<GeneratorForm />);
+
+      const beneficiaryField = screen.getByRole("textbox", {
+        name: /name of the beneficiary/i,
+      });
+      const errorHelperText = /name too long: max 70 ch./i;
+      const submitButton = screen.getByRole("button", { name: /generate/i });
+      const tooLongInput =
+        "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sapiente, nesciunt.";
+
+      // UI clean state - no error displayed initially
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(beneficiaryField).not.toHaveClass("border-error");
+
+      // Enter too many characters in the beneficiary field
+      await user.type(beneficiaryField, tooLongInput);
+
+      // Submit the form with too long input
+      await user.click(submitButton);
+
+      // Expected error on beneficiary field
+      expect(beneficiaryField).toHaveValue(tooLongInput);
+      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+      expect(beneficiaryField).toHaveClass("border-error");
+    });
   });
 
   describe("IBAN form field", () => {
