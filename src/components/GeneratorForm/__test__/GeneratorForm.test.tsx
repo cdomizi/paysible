@@ -1,3 +1,4 @@
+import * as qrcodeHook from "@/hooks/useQRCode";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { GeneratorForm } from "../GeneratorForm";
@@ -383,9 +384,43 @@ describe("GeneratorForm", () => {
     });
   });
 
-  test.todo("submits form when submit button is clicked");
+  test("submits form when submit button is clicked", async () => {
+    const user = userEvent.setup();
 
-  test.todo("resets all form fields when clear button is clicked");
+    // Mock QRCode context hook implementation
+    vi.spyOn(qrcodeHook, "useQRCode").mockImplementation(() => ({
+      setQRCode: vi.fn(),
+      qrcode: "",
+    }));
+
+    render(<GeneratorForm />);
+
+    const beneficiaryField = screen.getByRole("textbox", {
+      name: /^name of the beneficiary$/i,
+    });
+    const ibanField = screen.getByRole("textbox", { name: /^iban$/i });
+    const amountField = screen.getByRole("spinbutton", {
+      name: /^amount \(€\)$/i,
+    });
+    const remittanceField = screen.getByRole("textbox", { name: /^note/i });
+    const submitButton = screen.getByRole("button", { name: /^generate$/i });
+
+    // Fill form fields correctly
+    await user.type(beneficiaryField, "Jane Doe");
+    await user.type(ibanField, "IE29AIBK93115212345678");
+    await user.type(amountField, "10");
+    await user.type(remittanceField, "Gas ⛽");
+
+    await user.click(submitButton); // Submit the form
+
+    // No errors displayed
+    expect(beneficiaryField).not.toHaveClass("border-error");
+    expect(ibanField).not.toHaveClass("border-error");
+    expect(amountField).not.toHaveClass("border-error");
+    expect(remittanceField).not.toHaveClass("border-error");
+  });
 
   test.todo("updates qrcode context on successful submit");
+
+  test.todo("resets all form fields when clear button is clicked");
 });
