@@ -1,9 +1,21 @@
-import * as qrcodeHook from "@/hooks/useQRCode";
+import { QRCodeProvider } from "@/contexts/QRCodeContext";
+import * as useQRCode from "@/hooks/useQRCode";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { GeneratorForm } from "../GeneratorForm";
+import * as generatorFormService from "../GeneratorFormService";
 
-describe("GeneratorForm", () => {
+// Mock useQRCode hook
+const setQRCodeSpy = vi.fn();
+
+beforeEach(() => {
+  vi.spyOn(useQRCode, "useQRCode").mockReturnValue({
+    qrcode: "mock value",
+    setQRCode: setQRCodeSpy,
+  });
+});
+
+describe.only("GeneratorForm", () => {
   test("component renders correctly", () => {
     render(<GeneratorForm />);
 
@@ -387,12 +399,6 @@ describe("GeneratorForm", () => {
   test("submits form when submit button is clicked", async () => {
     const user = userEvent.setup();
 
-    // Mock QRCode context hook implementation
-    vi.spyOn(qrcodeHook, "useQRCode").mockImplementation(() => ({
-      setQRCode: vi.fn(),
-      qrcode: "",
-    }));
-
     render(<GeneratorForm />);
 
     const beneficiaryField = screen.getByRole("textbox", {
@@ -420,7 +426,46 @@ describe("GeneratorForm", () => {
     expect(remittanceField).not.toHaveClass("border-error");
   });
 
-  test.todo("updates qrcode context on successful submit");
+  test("updates qrcode context value on successful submit", async () => {
+    const user = userEvent.setup();
+
+    // Mock generateQRCodeFromPayload
+    const mockFormPayload = "QR code payload";
+    const generateQRCodeFromPayloadSpy = vi
+      .spyOn(generatorFormService, "generateQRCodeFromPayload")
+      .mockImplementation(vi.fn().mockResolvedValue(mockFormPayload));
+
+    const qrcodeContextWrapper = ({
+      children,
+    }: {
+      children: React.ReactNode;
+    }) => <QRCodeProvider>{children}</QRCodeProvider>;
+
+    render(<GeneratorForm />, { wrapper: qrcodeContextWrapper });
+
+    const beneficiaryField = screen.getByRole("textbox", {
+      name: /^name of the beneficiary$/i,
+    });
+    const ibanField = screen.getByRole("textbox", { name: /^iban$/i });
+    const amountField = screen.getByRole("spinbutton", {
+      name: /^amount \(€\)$/i,
+    });
+    const remittanceField = screen.getByRole("textbox", { name: /^note/i });
+    const submitButton = screen.getByRole("button", { name: /^generate$/i });
+
+    // Fill form fields correctly
+    await user.type(beneficiaryField, "Jane Doe");
+    await user.type(ibanField, "IE29AIBK93115212345678");
+    await user.type(amountField, "10");
+    await user.type(remittanceField, "Gas ⛽");
+
+    await user.click(submitButton); // Submit the form
+
+    expect(generateQRCodeFromPayloadSpy).toHaveBeenCalledOnce(); // Called by onSubmit
+    expect(generateQRCodeFromPayloadSpy).toHaveResolvedWith(mockFormPayload);
+    // Updates context value on form submit
+    expect(setQRCodeSpy).toHaveBeenCalledWith(mockFormPayload);
+  });
 
   test.todo("resets all form fields when clear button is clicked");
 });
