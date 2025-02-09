@@ -353,7 +353,34 @@ describe("GeneratorForm", () => {
   });
 
   describe("remittance form field", () => {
-    test.todo("shows error on input too long");
+    test("shows error on input too long", async () => {
+      const user = userEvent.setup();
+
+      render(<GeneratorForm />);
+
+      const remittanceField = screen.getByRole("textbox", {
+        name: /^note/i,
+      });
+      const errorHelperText = /^note too long: max 140 ch.$/i;
+      const submitButton = screen.getByRole("button", { name: /^generate$/i });
+      const tooLongInput =
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt cum voluptatem perspiciatis unde voluptates optio minus? Non quae iste nam.";
+
+      // UI clean state - no error displayed initially
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(remittanceField).not.toHaveClass("border-error");
+
+      // Enter too many characters in the remittance field
+      await user.type(remittanceField, tooLongInput);
+
+      // Submit the form with too long input
+      await user.click(submitButton);
+
+      // Expected error on remittance field
+      expect(remittanceField).toHaveValue(tooLongInput);
+      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+      expect(remittanceField).toHaveClass("border-error");
+    });
   });
 
   test.todo("submits form when submit button is clicked");
