@@ -80,10 +80,10 @@ describe("GeneratorForm", () => {
       render(<GeneratorForm />);
 
       const beneficiaryField = screen.getByRole("textbox", {
-        name: /name of the beneficiary/i,
+        name: /^name of the beneficiary$/i,
       });
       const errorHelperText = /^please enter the full name$/i;
-      const submitButton = screen.getByRole("button", { name: /generate/i });
+      const submitButton = screen.getByRole("button", { name: /^generate$/i });
 
       // UI clean state - no error displayed initially
       expect(() => screen.getByText(errorHelperText)).toThrow();
@@ -125,10 +125,10 @@ describe("GeneratorForm", () => {
       render(<GeneratorForm />);
 
       const beneficiaryField = screen.getByRole("textbox", {
-        name: /name of the beneficiary/i,
+        name: /^name of the beneficiary$/i,
       });
-      const errorHelperText = /name too long: max 70 ch./i;
-      const submitButton = screen.getByRole("button", { name: /generate/i });
+      const errorHelperText = /^name too long: max 70 ch.$/i;
+      const submitButton = screen.getByRole("button", { name: /^generate$/i });
       const tooLongInput =
         "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sapiente, nesciunt.";
 
@@ -150,7 +150,57 @@ describe("GeneratorForm", () => {
   });
 
   describe("IBAN form field", () => {
-    test.todo("validates IBAN field correctly");
+    test("validates IBAN field correctly", async () => {
+      const user = userEvent.setup();
+      const validIBAN = "IE29AIBK93115212345678";
+
+      render(<GeneratorForm />);
+
+      const ibanField = screen.getByRole("textbox", {
+        name: /^iban$/i,
+      });
+      const errorHelperText = /^please enter a valid iban$/i;
+      const submitButton = screen.getByRole("button", { name: /generate/i });
+
+      // UI clean state - no error displayed initially
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(ibanField).not.toHaveClass("border-error");
+
+      // Fill beneficiary field to prevent focus on error submit
+      await user.type(
+        screen.getByRole("textbox", { name: /^name of the beneficiary$/i }),
+        "Jane Doe",
+      );
+
+      // Enter invalid input in the IBAN field
+      await user.type(ibanField, validIBAN.slice(0, 2));
+
+      // Submit the form with invalid input
+      await user.click(submitButton);
+
+      // Expected error on IBAN field
+      expect(ibanField).toHaveValue("IE");
+      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+      expect(ibanField).toHaveFocus();
+      expect(ibanField).toHaveClass("border-error");
+
+      // Enter valid input in the IBAN field
+      await user.type(ibanField, validIBAN.slice(2));
+
+      // Error disappeared on IBAN field
+      expect(ibanField).toHaveValue(validIBAN);
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(ibanField).not.toHaveClass("border-error");
+
+      // Delete some characters from the required field to trigger the error again
+      await user.type(ibanField, "{backspace}{backspace}");
+
+      // UI displays error again
+      expect(ibanField).toHaveValue(validIBAN.slice(0, -2));
+      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+      expect(ibanField).toHaveFocus();
+      expect(ibanField).toHaveClass("border-error");
+    });
   });
 
   describe("amount form field", () => {
@@ -170,4 +220,6 @@ describe("GeneratorForm", () => {
   test.todo("submits form when submit button is clicked");
 
   test.todo("resets all form fields when clear button is clicked");
+
+  test.todo("updates qrcode context on successful submit");
 });
