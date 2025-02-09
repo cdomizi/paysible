@@ -467,5 +467,43 @@ describe.only("GeneratorForm", () => {
     expect(setQRCodeSpy).toHaveBeenCalledWith(mockFormPayload);
   });
 
-  test.todo("resets all form fields when clear button is clicked");
+  test("resets form fields when clear button is clicked", async () => {
+    const user = userEvent.setup();
+
+    render(<GeneratorForm />);
+
+    const beneficiaryField = screen.getByRole("textbox", {
+      name: /^name of the beneficiary$/i,
+    });
+    const beneficiaryFieldValue = "Jane Doe";
+    const ibanField = screen.getByRole("textbox", { name: /^iban$/i });
+    const ibanFieldValue = "IE29AIBK93115212345678";
+    const amountField = screen.getByRole("spinbutton", {
+      name: /^amount \(€\)$/i,
+    });
+    const amountFieldValue = 10;
+    const remittanceField = screen.getByRole("textbox", { name: /^note/i });
+    const remittanceFieldValue = "Gas ⛽";
+    const resetButton = screen.getByRole("button", { name: /^clear$/i });
+
+    // Fill form fields correctly
+    await user.type(beneficiaryField, beneficiaryFieldValue);
+    await user.type(ibanField, ibanFieldValue);
+    await user.type(amountField, amountFieldValue.toString());
+    await user.type(remittanceField, remittanceFieldValue);
+
+    // Form fields are filled
+    expect(beneficiaryField).toHaveValue(beneficiaryFieldValue);
+    expect(ibanField).toHaveValue(ibanFieldValue);
+    expect(amountField).toHaveValue(amountFieldValue);
+    expect(remittanceField).toHaveValue(remittanceFieldValue);
+
+    await user.click(resetButton); // Reset the form
+
+    // Form fields are empty
+    expect(beneficiaryField).not.toHaveValue(beneficiaryFieldValue);
+    expect(ibanField).not.toHaveValue(ibanFieldValue);
+    expect(amountField).not.toHaveValue(amountFieldValue);
+    expect(remittanceField).not.toHaveValue(remittanceFieldValue);
+  });
 });
