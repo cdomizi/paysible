@@ -31,63 +31,100 @@ describe("GeneratorForm", () => {
     expect(submitButton).toBeInTheDocument();
   });
 
-  test("displays error on missing required field", async () => {
-    const user = userEvent.setup();
+  describe("beneficiary form field", () => {
+    test("shows error on missing required field", async () => {
+      const user = userEvent.setup();
 
-    render(<GeneratorForm />);
+      render(<GeneratorForm />);
 
-    const beneficiaryField = screen.getByRole("textbox", {
-      name: /name of the beneficiary/i,
+      const beneficiaryField = screen.getByRole("textbox", {
+        name: /name of the beneficiary/i,
+      });
+      const errorHelperText = /please enter the full name/i;
+      const submitButton = screen.getByRole("button", { name: /generate/i });
+
+      // UI clean state - no error displayed initially
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(beneficiaryField).not.toHaveClass("border-error");
+
+      // Submit the form with empty required field
+      await user.click(submitButton);
+
+      // Required field shows error
+      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+      expect(beneficiaryField).toHaveFocus();
+      expect(beneficiaryField).toHaveClass("border-error");
     });
-    const errorHelperText = /please enter the full name/i;
-    const submitButton = screen.getByRole("button", { name: /generate/i });
 
-    // No error displayed in the UI
-    expect(() => screen.getByText(errorHelperText)).toThrow();
-    expect(beneficiaryField).not.toHaveClass("border-error");
+    test("validates name field correctly", async () => {
+      const user = userEvent.setup();
 
-    // Submit the form with empty required field
-    await user.click(submitButton);
+      render(<GeneratorForm />);
 
-    // Error displayed in the UI
-    expect(screen.getByText(errorHelperText)).toBeInTheDocument();
-    expect(beneficiaryField).toHaveFocus();
-    expect(beneficiaryField).toHaveClass("border-error");
+      const beneficiaryField = screen.getByRole("textbox", {
+        name: /name of the beneficiary/i,
+      });
+      const errorHelperText = /please enter the full name/i;
+      const submitButton = screen.getByRole("button", { name: /generate/i });
 
-    // Enter four characters in the required field
-    await user.type(beneficiaryField, "Jane");
+      // UI clean state - no error displayed initially
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(beneficiaryField).not.toHaveClass("border-error");
 
-    // UI still displays error
-    expect(beneficiaryField).toHaveValue("Jane");
-    expect(screen.getByText(errorHelperText)).toBeInTheDocument();
-    expect(beneficiaryField).toHaveFocus();
-    expect(beneficiaryField).toHaveClass("border-error");
+      // Enter four characters in the beneficiary field
+      await user.type(beneficiaryField, "Jane");
 
-    // Enter more characters in the required field
-    await user.type(beneficiaryField, " Doe");
+      // Submit the form with invalid input
+      await user.click(submitButton);
 
-    // UI no more displays error
-    expect(beneficiaryField).toHaveValue("Jane Doe");
-    expect(() => screen.getByText(errorHelperText)).toThrow();
-    expect(beneficiaryField).not.toHaveClass("border-error");
+      // UI displays error on beneficiary field
+      expect(beneficiaryField).toHaveValue("Jane");
+      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+      expect(beneficiaryField).toHaveFocus();
+      expect(beneficiaryField).toHaveClass("border-error");
 
-    // Delete some characters from the required field to trigger the error again
-    await user.type(beneficiaryField, "{backspace}{backspace}");
+      // Enter valid input in the beneficiary field
+      await user.type(beneficiaryField, " Doe");
 
-    // UI displays error again
-    expect(beneficiaryField).toHaveValue("Jane D");
-    expect(screen.getByText(errorHelperText)).toBeInTheDocument();
-    expect(beneficiaryField).toHaveFocus();
-    expect(beneficiaryField).toHaveClass("border-error");
+      // Error disappeared on beneficiary field
+      expect(beneficiaryField).toHaveValue("Jane Doe");
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(beneficiaryField).not.toHaveClass("border-error");
+
+      // Delete some characters from the required field to trigger the error again
+      await user.type(beneficiaryField, "{backspace}{backspace}");
+
+      // UI displays error again
+      expect(beneficiaryField).toHaveValue("Jane D");
+      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+      expect(beneficiaryField).toHaveFocus();
+      expect(beneficiaryField).toHaveClass("border-error");
+    });
+
+    test.todo("shows error on input too long");
   });
 
-  test.todo("validates name field correctly");
+  describe("IBAN form field", () => {
+    test.todo("shows error on missing required field");
 
-  test.todo("validates IBAN field correctly");
+    test.todo("validates IBAN field correctly");
+  });
 
-  test.todo("validates amount field correctly");
+  describe("amount form field", () => {
+    test.todo("shows error on missing required field");
+
+    test.todo("validates amount field correctly");
+
+    test.todo("shows error on amount too little");
+
+    test.todo("shows error on amount too large");
+  });
+
+  describe("remittance form field", () => {
+    test.todo("shows error on input too long");
+  });
 
   test.todo("submits form when submit button is clicked");
 
-  test.todo("resets all form fields when clear button is click");
+  test.todo("resets all form fields when clear button is clicked");
 });
