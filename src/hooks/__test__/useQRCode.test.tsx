@@ -1,30 +1,18 @@
-import { isInitialQRCode, scrollToQRCode } from "../useQRCode";
+import { QRCodeProvider } from "@/contexts/QRCodeContext";
+import { act, renderHook } from "@testing-library/react";
+import { isInitialQRCode, scrollToQRCode, useQRCode } from "../useQRCode";
 
-const mocks = vi.hoisted(() => ({
-  INITIAL_QRCODE: "mock/matching/file/path.png",
-}));
-
-vi.mock("@contexts/QRCodeContext", async () => {
-  const originalModule = await vi.importActual("@contexts/QRCodeContext");
-
-  return {
-    ...originalModule,
-    INITIAL_QRCODE: mocks.INITIAL_QRCODE,
-  };
-});
+const matchingPath = "./placeholder-qrcode.png";
+const nonMatchingPath = "mock/non-matching/file/path.png";
 
 describe("isInitialQRCode", () => {
   test("returns true on matching file path", () => {
-    const matchingPath = "mock/matching/file/path.png";
-
     const result = isInitialQRCode(matchingPath);
 
     expect(result).toBe(true);
   });
 
   test("returns false on non-matching file path", () => {
-    const nonMatchingPath = "mock/non-matching/file/path.png";
-
     const result = isInitialQRCode(nonMatchingPath);
 
     expect(result).toBe(false);
@@ -40,5 +28,24 @@ describe("scrollToQRCode", () => {
     scrollToQRCode();
 
     expect(scrollIntoViewMock).toHaveBeenCalledOnce();
+  });
+});
+
+describe("useQRCode", () => {
+  test("updated QRCodeContext value", () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QRCodeProvider>{children}</QRCodeProvider>
+    );
+    const newQRCodeValue = "New QR code value";
+
+    const { result } = renderHook(() => useQRCode(), { wrapper });
+
+    expect(result.current.qrcode).toBe(matchingPath);
+
+    act(() => {
+      result.current.setQRCode(newQRCodeValue);
+    });
+
+    expect(result.current.qrcode).toBe(newQRCodeValue);
   });
 });
