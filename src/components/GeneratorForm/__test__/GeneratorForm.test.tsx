@@ -109,7 +109,7 @@ describe("GeneratorForm", () => {
       expect(() => screen.getByText(errorHelperText)).toThrow();
       expect(beneficiaryField).not.toHaveClass("border-error");
 
-      // Delete some characters from the required field to trigger the error again
+      // Delete some characters from the beneficiary field to trigger the error again
       await user.type(beneficiaryField, "{backspace}{backspace}");
 
       // UI displays error again
@@ -192,7 +192,7 @@ describe("GeneratorForm", () => {
       expect(() => screen.getByText(errorHelperText)).toThrow();
       expect(ibanField).not.toHaveClass("border-error");
 
-      // Delete some characters from the required field to trigger the error again
+      // Delete some characters from the IBAN field to trigger the error again
       await user.type(ibanField, "{backspace}{backspace}");
 
       // UI displays error again
@@ -204,13 +204,152 @@ describe("GeneratorForm", () => {
   });
 
   describe("amount form field", () => {
-    test.todo("shows error on missing required field");
+    test("validates amount field correctly", async () => {
+      const user = userEvent.setup();
 
-    test.todo("validates amount field correctly");
+      render(<GeneratorForm />);
 
-    test.todo("shows error on amount too little");
+      const amountField = screen.getByRole("spinbutton", {
+        name: /^amount/i,
+      });
+      const errorHelperText = /^please enter at least € 0.01$/i;
+      const submitButton = screen.getByRole("button", { name: /generate/i });
 
-    test.todo("shows error on amount too large");
+      // UI clean state - no error displayed initially
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(amountField).not.toHaveClass("border-error");
+
+      // Fill beneficiary & IBAN fields to prevent focus on error submit
+      await user.type(
+        screen.getByRole("textbox", { name: /^name of the beneficiary$/i }),
+        "Jane Doe",
+      );
+      await user.type(
+        screen.getByRole("textbox", { name: /^iban$/i }),
+        "IE29AIBK93115212345678",
+      );
+
+      // Enter invalid input in the amount field
+      await user.type(amountField, "invalid input");
+
+      // Submit the form with invalid input
+      await user.click(submitButton);
+
+      // Expected error on amount field
+      expect(amountField).toHaveValue(null);
+      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+      expect(amountField).toHaveFocus();
+      expect(amountField).toHaveClass("border-error");
+
+      // Enter valid input in the amount field
+      await user.type(amountField, "10");
+
+      // Error disappeared on amount field
+      expect(amountField).toHaveValue(10);
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(amountField).not.toHaveClass("border-error");
+
+      // Delete some characters from the amount field to trigger the error again
+      await user.type(amountField, "{backspace}{backspace}");
+
+      // UI displays error again
+      expect(amountField).toHaveValue(null);
+      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+      expect(amountField).toHaveFocus();
+      expect(amountField).toHaveClass("border-error");
+    });
+
+    test("shows error on amount too little", async () => {
+      const user = userEvent.setup();
+
+      render(<GeneratorForm />);
+
+      const amountField = screen.getByRole("spinbutton", {
+        name: /^amount/i,
+      });
+      const errorHelperText = /^please enter at least € 0.01$/i;
+      const submitButton = screen.getByRole("button", { name: /generate/i });
+
+      // UI clean state - no error displayed initially
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(amountField).not.toHaveClass("border-error");
+
+      // Fill beneficiary & IBAN fields to prevent focus on error submit
+      await user.type(
+        screen.getByRole("textbox", { name: /^name of the beneficiary$/i }),
+        "Jane Doe",
+      );
+      await user.type(
+        screen.getByRole("textbox", { name: /^iban$/i }),
+        "IE29AIBK93115212345678",
+      );
+
+      // Enter invalid input in the amount field
+      await user.type(amountField, "0");
+
+      // Submit the form with invalid input
+      await user.click(submitButton);
+
+      // Expected error on amount field
+      expect(amountField).toHaveValue(0);
+      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+      expect(amountField).toHaveFocus();
+      expect(amountField).toHaveClass("border-error");
+
+      // Enter valid input in the amount field
+      await user.type(amountField, "10");
+
+      // Error disappeared on amount field
+      expect(amountField).toHaveValue(10);
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(amountField).not.toHaveClass("border-error");
+    });
+
+    test("shows error on amount too large", async () => {
+      const user = userEvent.setup();
+
+      render(<GeneratorForm />);
+
+      const amountField = screen.getByRole("spinbutton", {
+        name: /^amount/i,
+      });
+      const errorHelperText = /^Amount shall not be € 1 bn\+$/i;
+      const submitButton = screen.getByRole("button", { name: /generate/i });
+
+      // UI clean state - no error displayed initially
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(amountField).not.toHaveClass("border-error");
+
+      // Fill beneficiary & IBAN fields to prevent focus on error submit
+      await user.type(
+        screen.getByRole("textbox", { name: /^name of the beneficiary$/i }),
+        "Jane Doe",
+      );
+      await user.type(
+        screen.getByRole("textbox", { name: /^iban$/i }),
+        "IE29AIBK93115212345678",
+      );
+
+      // Enter invalid input in the amount field
+      await user.type(amountField, "1000000000");
+
+      // Submit the form with invalid input
+      await user.click(submitButton);
+
+      // Expected error on amount field
+      expect(amountField).toHaveValue(1000000000);
+      expect(screen.getByText(errorHelperText)).toBeInTheDocument();
+      expect(amountField).toHaveFocus();
+      expect(amountField).toHaveClass("border-error");
+
+      // Enter valid input in the amount field
+      await user.type(amountField, "{backspace}{backspace}");
+
+      // Error disappeared on amount field
+      expect(amountField).toHaveValue(10000000);
+      expect(() => screen.getByText(errorHelperText)).toThrow();
+      expect(amountField).not.toHaveClass("border-error");
+    });
   });
 
   describe("remittance form field", () => {
