@@ -1,24 +1,11 @@
-import { isInitialQRCode, useQRCode } from "@hooks/useQRCode";
+import { useQRCode } from "@hooks/useQRCode";
+import { getCTA, getCTADescription } from "./QRCodeService";
 
 export function QRCode() {
   const { qrcode } = useQRCode();
 
-  const CTA = {
-    INITIAL: "Create a new QR Code",
-    SUCCESS: "Scan & Pay!",
-  } as const;
-
-  const CTA_DESCRIPTION = {
-    INITIAL: "Enter your payment data to generate a new code ✨",
-    SUCCESS:
-      "Use your mobile banking app to scan the code and make the payment 👌",
-  } as const;
-
-  // Change call to action/description on QR code generation
-  const callToAction = isInitialQRCode(qrcode) ? CTA.INITIAL : CTA.SUCCESS;
-  const ctaDescription = isInitialQRCode(qrcode)
-    ? CTA_DESCRIPTION.INITIAL
-    : CTA_DESCRIPTION.SUCCESS;
+  const callToAction = getCTA(qrcode);
+  const ctaDescription = getCTADescription(qrcode);
 
   return (
     <div
@@ -34,8 +21,10 @@ export function QRCode() {
         />
       </figure>
       <div className="card-body items-center text-center">
-        <h2 className="card-title">{callToAction}</h2>
-        <p>{ctaDescription}</p>
+        <h2 id="qrcode-cta" className="card-title">
+          {callToAction}
+        </h2>
+        <p id="qrcode-cta-description">{ctaDescription}</p>
       </div>
     </div>
   );
