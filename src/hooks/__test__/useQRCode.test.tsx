@@ -1,4 +1,4 @@
-import { QRCodeProvider } from "@/contexts/QRCodeContext";
+import { QRCodeProvider } from "@contexts/QRCodeContext";
 import { act, renderHook } from "@testing-library/react";
 import { isInitialQRCode, scrollToQRCode, useQRCode } from "../useQRCode";
 

@@ -1,5 +1,5 @@
-import { QRCodeProvider } from "@/contexts/QRCodeContext";
-import * as useQRCode from "@/hooks/useQRCode";
+import { QRCodeProvider } from "@contexts/QRCodeContext";
+import * as useQRCode from "@hooks/useQRCode";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { GeneratorForm } from "../GeneratorForm";

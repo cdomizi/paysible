@@ -1,4 +1,4 @@
-import { isInitialQRCode } from "@/hooks/useQRCode";
+import { isInitialQRCode } from "@hooks/useQRCode";
 
 export const CTA = {
   INITIAL: "Create a new QR Code",

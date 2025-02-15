@@ -28,7 +28,7 @@ export default tseslint.config(
       ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
       react.configs.flat.recommended,
-      importPlugin.flatConfigs.recommended,
+      importPlugin.flatConfigs.typescript,
       jsxA11y.flatConfigs.recommended,
       ...tailwindcss.configs["flat/recommended"],
     ],
