@@ -17,6 +17,9 @@ export function scrollToQRCode() {
 export function useQRCode() {
   const { qrcode, setQRCode } = useContext(QRCodeContext);
 
+  // Throw error on hook used outside provider
+  if (!qrcode) throw new Error("useQRCode must be used within QRCodeContext");
+
   function updateQRCode(newQRCode: string) {
     setQRCode(newQRCode);
 

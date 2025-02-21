@@ -32,6 +32,9 @@ describe("scrollToQRCode", () => {
 });
 
 describe("useQRCode", () => {
+  test("throws error when used outside the context provider", () => {
+    expect(() => useQRCode()).toThrow();
+  });
   test("updated QRCodeContext value", () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <QRCodeProvider>{children}</QRCodeProvider>
